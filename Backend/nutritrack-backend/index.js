@@ -14,18 +14,6 @@ app.use(cors());
 app.use(express.json());
 app.use("/", nutritionSummaryRoute);
 
-// 🔒 Twilio setup
-// const accountSid = "ACdb6f3197298d158436e6a2bbb46d4352"; // Replace with your actual SID
-// const authToken = "3127870f0c45fb530028c183b9de078a"; // Replace with your actual auth token
-// const twilioNumber = "+17755938586"; // Replace with your Twilio number
-// const client = twilio(accountSid, authToken);
-
-//reine
-const accountSid = "AC040313476053cfbbef8d3fe606ff440d"; // Replace with your actual SID
-const authToken = "4930a0e09d567c36f13dc897b0f314b4"; // Replace with your actual auth token
-const twilioNumber = "+19707171472"; // Replace with your Twilio number
-const client = twilio(accountSid, authToken);
-
 // ✅ Register a patient and send onboarding SMS
 app.post("/send-sms", async (req, res) => {
   const { name, phone, language, trimester, assignedTo } = req.body;
