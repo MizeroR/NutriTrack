@@ -1,0 +1,6 @@
+{
+  "beans": { "calories": 240, "protein": 14, "iron": 3.6 },
+  "milk": { "calories": 150, "protein": 8, "iron": 0.1 },
+  "ugali": { "calories": 300, "protein": 4, "iron": 0.2 },
+  "cabbage": { "calories": 25, "protein": 1, "iron": 0.3 }
+}
