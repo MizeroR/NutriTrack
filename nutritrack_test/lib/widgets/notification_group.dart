@@ -8,11 +8,11 @@ class NotificationGroup extends StatelessWidget {
   final void Function(NotificationModel)? onTap;
 
   const NotificationGroup({
-    Key? key,
+    super.key,
     required this.groupLabel,
     required this.notifications,
     this.onTap,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

@@ -2,35 +2,147 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../state/auth_state.dart';
 import '../widgets/auth_text_field.dart';
-// import '../widgets/social_auth_button.dart';
 import '../screens/signup_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
+
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  final _formKey = GlobalKey<FormState>();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  String? _validateEmail(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Email is required';
+    }
+    if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
+      return 'Enter a valid email address';
+    }
+    return null;
+  }
+
+  String? _validatePassword(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Password is required';
+    }
+    if (value.length < 6) {
+      return 'Password must be at least 6 characters';
+    }
+    return null;
+  }
+
+  Future<void> _handleLogin() async {
+    if (!_formKey.currentState!.validate()) return;
+    
+    final authState = Provider.of<AuthState>(context, listen: false);
+    await authState.login(
+      _emailController.text.trim(),
+      _passwordController.text.trim(),
+    );
+    
+    if (authState.isLoggedIn && mounted) {
+      Navigator.pushReplacementNamed(context, '/home');
+    }
+  }
+
+  void _showForgotPasswordDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Reset Password'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text('Enter your email to receive a password reset link:'),
+            const SizedBox(height: 16),
+            TextField(
+              decoration: const InputDecoration(
+                hintText: 'Email address',
+                border: OutlineInputBorder(),
+              ),
+              onSubmitted: (email) async {
+                try {
+                  await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+                  Navigator.pop(context);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Password reset email sent!')),
+                  );
+                } catch (e) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Error: ${e.toString()}')),
+                  );
+                }
+              },
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+        ],
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     final authState = Provider.of<AuthState>(context);
-    final emailController = TextEditingController();
-    final passwordController = TextEditingController();
 
-    return Scaffold(
-      backgroundColor: const Color(0xFFFFFFFF),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 32.0),
-          child: Column(
-            children: [
-              const SizedBox(height: 80),
-              SizedBox(
-                width: 120,
-                height: 60,
-                child: Image.asset(
-                  'assets/images/logo.png',
-                  fit: BoxFit.contain,
-                ),
-              ),
-              const SizedBox(height: 60),
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: Scaffold(
+        backgroundColor: const Color(0xFFFFFFFF),
+        body: SafeArea(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: 32.0),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                children: [
+                  const SizedBox(height: 80),
+                  SizedBox(
+                    width: 120,
+                    height: 60,
+                    child: Image.asset(
+                      'assets/images/logo.png',
+                      fit: BoxFit.contain,
+                      errorBuilder: (context, error, stackTrace) {
+                        return Container(
+                          width: 120,
+                          height: 60,
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF91C788),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: const Center(
+                            child: Text(
+                              'NutriTrack',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                  const SizedBox(height: 60),
 
               // Error Message
               if (authState.errorMessage != null)
@@ -64,113 +176,107 @@ class LoginScreen extends StatelessWidget {
                   ),
                 ),
 
-              // Email Field
-              AuthTextField(
-                controller: emailController,
-                hintText: 'Email',
-                keyboardType: TextInputType.emailAddress,
-              ),
-              const SizedBox(height: 16),
-
-              // Password Field
-              AuthTextField(
-                controller: passwordController,
-                hintText: 'Password',
-                obscureText: true,
-              ),
-              const SizedBox(height: 24),
-
-              // Login Button
-              GestureDetector(
-                onTap: authState.isLoading
-                    ? null
-                    : () async {
-                        // Add your login logic here
-                        await authState.login(
-                          emailController.text.trim(),
-                          passwordController.text.trim(),
-                        );
-                        // Navigate to the home screen or show a success message
-                        if (authState.isLoggedIn) {
-                          authState.printCurrentUser(); // Debugging line
-
-                          Navigator.pushReplacementNamed(context, '/home');
-                        }
-                      },
-                child: Container(
-                  width: double.infinity,
-                  height: 56,
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF91C788),
-                    borderRadius: BorderRadius.circular(16),
+                  // Email Field
+                  AuthTextField(
+                    controller: _emailController,
+                    hintText: 'Email',
+                    keyboardType: TextInputType.emailAddress,
+                    prefixIcon: Icons.email_outlined,
+                    validator: _validateEmail,
+                    helperText: 'Enter your registered email address',
                   ),
-                  child: Center(
-                    child: authState.isLoading
-                        ? const SizedBox(
-                            height: 24,
-                            width: 24,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                              valueColor: AlwaysStoppedAnimation<Color>(
-                                Colors.white,
+                  const SizedBox(height: 16),
+
+                  // Password Field
+                  AuthTextField(
+                    controller: _passwordController,
+                    hintText: 'Password',
+                    obscureText: true,
+                    prefixIcon: Icons.lock_outline,
+                    showPasswordToggle: true,
+                    validator: _validatePassword,
+                  ),
+                  const SizedBox(height: 8),
+
+                  // Forgot Password
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: TextButton(
+                      onPressed: _showForgotPasswordDialog,
+                      child: const Text(
+                        'Forgot Password?',
+                        style: TextStyle(
+                          color: Color(0xFF91C788),
+                          fontSize: 14,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+
+                  // Login Button
+                  SizedBox(
+                    width: double.infinity,
+                    height: 56,
+                    child: ElevatedButton(
+                      onPressed: authState.isLoading ? null : _handleLogin,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF91C788),
+                        disabledBackgroundColor: const Color(0xFF91C788).withValues(alpha: 0.6),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        elevation: 0,
+                      ),
+                      child: authState.isLoading
+                          ? const SizedBox(
+                              height: 24,
+                              width: 24,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                              ),
+                            )
+                          : const Text(
+                              'Log In',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 18,
+                                fontWeight: FontWeight.w600,
                               ),
                             ),
-                          )
-                        : const Text(
-                            'Log In',
+                    ),
+                  ),
+
+                  const SizedBox(height: 32),
+
+                  // Sign Up Redirect
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (_) => const SignUpScreen()),
+                      );
+                    },
+                    child: RichText(
+                      text: const TextSpan(
+                        text: "Don't have an account? ",
+                        style: TextStyle(color: Color(0xFF6B7280)),
+                        children: [
+                          TextSpan(
+                            text: 'Sign Up',
                             style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 18,
+                              color: Color(0xFF91C788),
                               fontWeight: FontWeight.w600,
                             ),
                           ),
+                        ],
+                      ),
+                    ),
                   ),
-                ),
-              ),
-
-              const SizedBox(height: 32),
-
-              // Social Login Buttons
-              Row(
-                children: [
-                  // Expanded(
-                  //   child: SocialAuthButton(
-                  //     iconText: 'G',
-                  //     label: 'Google',
-                  //     onPressed: authState.isLoading
-                  //         ? null
-                  //         : () => authState.signInWithGoogle(),
-                  //   ),
-                  // ),
-                  const SizedBox(width: 16),
-                  // Expanded(
-                  //   child: SocialAuthButton(
-                  //     iconText: 'f',
-                  //     label: 'Facebook',
-                  //     onPressed: authState.isLoading
-                  //         ? null
-                  //         : () => authState.signInWithFacebook(),
-                  //   ),
-                  // ),
                 ],
               ),
-
-              const SizedBox(height: 32),
-
-              // Sign Up Redirect
-              TextButton(
-                onPressed: () {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (_) => const SignUpScreen()),
-                  );
-                },
-                child: const Text(
-                  'Don\'t have an account? Sign Up',
-                  style: TextStyle(color: Color(0xFF6B7280)),
-                ),
-              ),
-            ],
+            ),
           ),
         ),
       ),

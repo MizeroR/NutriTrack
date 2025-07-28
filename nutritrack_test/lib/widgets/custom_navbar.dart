@@ -195,7 +195,7 @@ class _NavIcon extends StatelessWidget {
         height: 44,
         decoration: BoxDecoration(
           color: isActive
-              ? const Color(0xFF81B56C).withOpacity(0.2)
+              ? const Color(0xFF81B56C).withValues(alpha: 0.2)
               : Colors.transparent,
           borderRadius: BorderRadius.circular(12),
         ),

@@ -232,14 +232,18 @@ class _AddPatientFormDialogState extends State<AddPatientFormDialog> {
       };
 
       await apiService.registerPatient(patientData);
-      Navigator.pop(context); // Close the dialog
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Patient registered successfully')),
-      );
+      if (mounted) {
+        Navigator.pop(context); // Close the dialog
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Patient registered successfully')),
+        );
+      }
     } catch (e) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('Error: ${e.toString()}')));
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error: ${e.toString()}')));
+      }
     }
   }
 }

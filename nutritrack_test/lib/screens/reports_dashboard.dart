@@ -50,7 +50,7 @@ class ReportsAnalyticsScreen extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             // Category cards
-            Container(
+            SizedBox(
               height: 80,
               child: ListView(
                 scrollDirection: Axis.horizontal,
@@ -58,18 +58,18 @@ class ReportsAnalyticsScreen extends StatelessWidget {
                 children: [
                   _buildCategoryCard(
                     'Gynecologist',
-                    'assets/images/report_analytics_images/Group 1348.png',
+                    Icons.medical_services,
                     selected: true,
                   ),
                   const SizedBox(width: 16),
                   _buildCategoryCard(
                     'Medicine',
-                    'assets/images/report_analytics_images/Group 1333.png',
+                    Icons.medication,
                   ),
                   const SizedBox(width: 16),
                   _buildCategoryCard(
                     'Psychologist',
-                    'assets/images/report_analytics_images/Group 1330.png',
+                    Icons.psychology,
                   ),
                 ],
               ),
@@ -97,21 +97,21 @@ class ReportsAnalyticsScreen extends StatelessWidget {
                     'Ashlynn Caizoni',
                     'Gynecologist Specialist',
                     '08.00am - 03.00pm',
-                    'assets/images/report_analytics_images/pic-3 2.png',
+                    Icons.person,
                   ),
                   const SizedBox(height: 16),
                   _buildDoctorCard(
                     'Ashlynn Caizoni',
                     'Medicine Specialist',
                     '08.00am - 03.00pm',
-                    'assets/images/report_analytics_images/pic-2 2.png',
+                    Icons.person,
                   ),
                   const SizedBox(height: 16),
                   _buildDoctorCard(
                     'Ashlynn Caizoni',
                     'Psychologist',
                     '08.00am - 03.00pm',
-                    'assets/images/report_analytics_images/pic-1 2.png',
+                    Icons.person,
                   ),
                 ],
               ),
@@ -126,7 +126,7 @@ class ReportsAnalyticsScreen extends StatelessWidget {
           color: Colors.white,
           boxShadow: [
             BoxShadow(
-              color: Colors.grey.withOpacity(0.1),
+              color: Colors.grey.withValues(alpha: 0.1),
               spreadRadius: 1,
               blurRadius: 10,
               offset: Offset(0, -2),
@@ -184,7 +184,7 @@ class ReportsAnalyticsScreen extends StatelessWidget {
 
   Widget _buildCategoryCard(
     String title,
-    String imagePath, {
+    IconData icon, {
     bool selected = false,
   }) {
     return Container(
@@ -202,7 +202,7 @@ class ReportsAnalyticsScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset(imagePath, width: 32, height: 32, fit: BoxFit.contain),
+            Icon(icon, size: 32, color: selected ? Color(0xFF7BAC73) : Colors.black),
             const SizedBox(height: 8),
             Text(
               title,
@@ -223,7 +223,7 @@ class ReportsAnalyticsScreen extends StatelessWidget {
     String name,
     String specialty,
     String time,
-    String imagePath,
+    IconData icon,
   ) {
     return Container(
       padding: const EdgeInsets.all(16),
@@ -234,7 +234,7 @@ class ReportsAnalyticsScreen extends StatelessWidget {
         border: Border.all(color: Colors.grey[300]!, width: 1.5),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.04),
+            color: Colors.grey.withValues(alpha: 0.04),
             blurRadius: 2,
             offset: Offset(0, 1),
           ),
@@ -242,14 +242,14 @@ class ReportsAnalyticsScreen extends StatelessWidget {
       ),
       child: Row(
         children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(14),
-            child: Image.asset(
-              imagePath,
-              width: 56,
-              height: 56,
-              fit: BoxFit.cover,
+          Container(
+            width: 56,
+            height: 56,
+            decoration: BoxDecoration(
+              color: Color(0xFF7BAC73).withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(14),
             ),
+            child: Icon(icon, size: 32, color: Color(0xFF7BAC73)),
           ),
           const SizedBox(width: 16),
           Expanded(

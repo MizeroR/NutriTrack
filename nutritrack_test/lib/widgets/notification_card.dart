@@ -7,8 +7,7 @@ class NotificationCard extends StatelessWidget {
   final NotificationModel notification;
   final VoidCallback? onTap;
 
-  const NotificationCard({Key? key, required this.notification, this.onTap})
-    : super(key: key);
+  const NotificationCard({super.key, required this.notification, this.onTap});
 
   String _formatTimeAgo(DateTime date) {
     final Duration diff = DateTime.now().difference(date);
@@ -53,12 +52,12 @@ class NotificationCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: notification.isRead
               ? Colors.white
-              : const Color(0xFFE6F3ED).withOpacity(0.7),
+              : const Color(0xFFE6F3ED).withValues(alpha: 0.7),
           borderRadius: BorderRadius.circular(12),
           boxShadow: [
             if (!notification.isRead)
               BoxShadow(
-                color: Colors.grey.withOpacity(0.1),
+                color: Colors.grey.withValues(alpha: 0.1),
                 blurRadius: 4,
                 offset: const Offset(0, 2),
               ),
@@ -70,7 +69,7 @@ class NotificationCard extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: _getIconColor(notification.iconType).withOpacity(0.2),
+                color: _getIconColor(notification.iconType).withValues(alpha: 0.2),
                 shape: BoxShape.circle,
               ),
               child: Icon(

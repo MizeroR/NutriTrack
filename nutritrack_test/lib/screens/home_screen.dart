@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../widgets/home_card.dart';
-import 'patients_dashboard.dart'; // Import the PatientsDashboard screen
+import 'patients_dashboard.dart';
+import 'alert_management.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -49,7 +50,14 @@ class HomeScreen extends StatelessWidget {
                 title: 'Alert Management',
                 subtitle: 'Assign Follow-up',
                 buttonLabel: 'Period logs',
-                onTap: () {},
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const AlertManagementScreen(),
+                    ),
+                  );
+                },
               ),
             ],
           ),

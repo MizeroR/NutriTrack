@@ -121,19 +121,16 @@ class OptionsMenuSheet extends StatelessWidget {
   }
 
   void _openAddPatientForm(BuildContext context) {
-    // Capture a valid context before popping
-    final navigatorContext = Navigator.of(context, rootNavigator: true);
-
-    // Close the bottom sheet
-    navigatorContext.pop();
-
-    // Schedule the dialog after the sheet is gone
+    Navigator.pop(context);
+    
     Future.delayed(const Duration(milliseconds: 200), () {
-      showDialog(
-        context: navigatorContext.context,
-        barrierDismissible: true,
-        builder: (context) => const AddPatientFormDialog(),
-      );
+      if (context.mounted) {
+        showDialog(
+          context: context,
+          barrierDismissible: true,
+          builder: (context) => const AddPatientFormDialog(),
+        );
+      }
     });
   }
 }
