@@ -32,13 +32,13 @@ class Patient {
     return Patient(
       id: id,
       name: data['name'] ?? 'Unknown',
-      age: data['age'] ?? 0,
-      visits: data['visits'], // Will be null if field doesn't exist
+      age: (data['age'] is int) ? data['age'] : (int.tryParse(data['age'].toString()) ?? 0),
+      visits: data['visits'],
       phone: data['phone'] ?? '',
-      duration: data['duration'], // Will be null if field doesn't exist
+      duration: data['duration'],
       language: data['language'] ?? 'english',
-      trimester: data['trimester'] ?? 0,
-      createdAt: DateTime.parse(data['createdAt']), // Assuming ISO string
+      trimester: (data['trimester'] is int) ? data['trimester'] : (int.tryParse(data['trimester'].toString()) ?? 1),
+      createdAt: data['createdAt'] != null ? DateTime.parse(data['createdAt']) : DateTime.now(),
     );
   }
 }

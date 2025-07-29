@@ -16,7 +16,7 @@ class _AddPatientFormDialogState extends State<AddPatientFormDialog> {
   String? _selectedTrimester;
   String? _selectedLanguage;
   String? _selectedAge;
-  final List<String> _ageOptions = List.generate(100, (i) => '${i + 1}');
+  final List<String> _ageOptions = ['Less than 18', ...List.generate(28, (i) => '${i + 18}'), 'Older than 45'];
   final List<String> _trimesterOptions = ['1', '2', '3'];
   final List<String> _languageOptions = ['english', 'swahili', 'kinyarwanda'];
 
@@ -222,10 +222,19 @@ class _AddPatientFormDialogState extends State<AddPatientFormDialog> {
     final apiService = Provider.of<ApiService>(context, listen: false);
 
     try {
+      int ageValue;
+      if (_selectedAge == 'Less than 18') {
+        ageValue = 17;
+      } else if (_selectedAge == 'Older than 45') {
+        ageValue = 46;
+      } else {
+        ageValue = int.parse(_selectedAge!);
+      }
+      
       final patientData = {
         'name': _nameController.text,
         'phone': _mobileController.text,
-        'age': int.parse(_selectedAge!),
+        'age': ageValue,
         'trimester': int.parse(_selectedTrimester!),
         'language': _selectedLanguage!,
         'assignedTo': authState.currentUserData?['healthcareId'],

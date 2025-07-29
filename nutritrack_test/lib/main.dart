@@ -17,10 +17,14 @@ import 'package:nutritrack_test/services/notification_service.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  
+  final authState = AuthState();
+  await authState.init();
+  
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => AuthState()),
+        ChangeNotifierProvider.value(value: authState),
         ChangeNotifierProvider(create: (_) => NavState()),
         ProxyProvider<AuthState, ApiService>(
           update: (context, authState, _) {

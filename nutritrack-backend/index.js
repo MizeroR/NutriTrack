@@ -58,9 +58,11 @@ const client = twilio(accountSid, authToken);
 
 // ✅ Register a patient and send onboarding SMS
 app.post("/send-sms", async (req, res) => {
-  const { name, phone, language, trimester, assignedTo } = req.body;
+  console.log('Received patient data:', req.body); // Debug log
+  const { name, phone, age, language, trimester, assignedTo } = req.body;
 
-  if (!name || !phone || !language || !trimester) {
+  if (!name || !phone || !age || !language || !trimester) {
+    console.log('Missing fields - name:', name, 'phone:', phone, 'age:', age, 'language:', language, 'trimester:', trimester);
     return res.status(400).send("Missing required fields");
   }
 
@@ -91,14 +93,17 @@ app.post("/send-sms", async (req, res) => {
       timestamp: admin.firestore.FieldValue.serverTimestamp(),
     });
 
-    await db.collection("patients").add({
+    const patientData = {
       name,
       phone: phone.trim(),
+      age,
       language,
       trimester,
       assignedTo: assignedTo || "unassigned",
       createdAt: admin.firestore.FieldValue.serverTimestamp(),
-    });
+    };
+    console.log('Saving patient to database:', patientData); // Debug log
+    await db.collection("patients").add(patientData);
 
     console.log(`✅ SMS sent to ${phone} (SID: ${sms.sid})`);
     res.status(200).send("SMS sent and logged.");

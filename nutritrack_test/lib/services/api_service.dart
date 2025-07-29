@@ -35,7 +35,9 @@ class ApiService {
     );
 
     if (response.statusCode == 200) {
-      return jsonDecode(response.body);
+      final data = jsonDecode(response.body);
+      print('Patients API Response: $data'); // Debug log
+      return data;
     } else {
       throw Exception('Failed to load patients');
     }

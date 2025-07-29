@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../state/auth_state.dart';
 import '../widgets/settings_item.dart';
 import '../widgets/settings_section.dart';
+import 'login_screen.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -44,7 +45,7 @@ class SettingsScreen extends StatelessWidget {
                   SettingsItem(
                     icon: Icons.person_outline,
                     title: 'Your Profile',
-                    onTap: () => _navigateToProfile(context),
+                    onTap: () => _showProfileDialog(context),
                   ),
                 ],
               ),
@@ -56,7 +57,7 @@ class SettingsScreen extends StatelessWidget {
                   SettingsItem(
                     icon: Icons.history,
                     title: 'History Transaction',
-                    onTap: () {},
+                    onTap: () => _showHistoryDialog(context),
                   ),
                 ],
               ),
@@ -68,12 +69,12 @@ class SettingsScreen extends StatelessWidget {
                   SettingsItem(
                     icon: Icons.lock_outline,
                     title: 'Change password',
-                    onTap: () {},
+                    onTap: () => _showChangePasswordDialog(context),
                   ),
                   SettingsItem(
                     icon: Icons.lock_outline,
                     title: 'Forgot password',
-                    onTap: () {},
+                    onTap: () => _showForgotPasswordDialog(context),
                   ),
                 ],
               ),
@@ -86,17 +87,17 @@ class SettingsScreen extends StatelessWidget {
                   SettingsItem(
                     icon: Icons.notifications_outlined,
                     title: 'Notification',
-                    onTap: () {},
+                    onTap: () => _showNotificationDialog(context),
                   ),
                   SettingsItem(
                     icon: Icons.language_outlined,
                     title: 'Languages',
-                    onTap: () {},
+                    onTap: () => _showLanguageDialog(context),
                   ),
                   SettingsItem(
                     icon: Icons.help_outline,
                     title: 'Help and Support',
-                    onTap: () {},
+                    onTap: () => _showHelpDialog(context),
                   ),
                 ],
               ),
@@ -124,9 +125,211 @@ class SettingsScreen extends StatelessWidget {
     );
   }
 
-  void _navigateToProfile(BuildContext context) {
-    // Replace with your profile screen navigation
-    Navigator.pushNamed(context, '/profile');
+  void _showProfileDialog(BuildContext context) {
+    final authState = Provider.of<AuthState>(context, listen: false);
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Your Profile'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Name: ${authState.currentUserData?['name'] ?? 'N/A'}'),
+            const SizedBox(height: 8),
+            Text('Email: ${authState.user?.email ?? 'N/A'}'),
+            const SizedBox(height: 8),
+            Text('Healthcare ID: ${authState.currentUserData?['healthcareId'] ?? 'N/A'}'),
+            const SizedBox(height: 8),
+            Text('Role: ${authState.currentUserData?['role'] ?? 'N/A'}'),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Close'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showHistoryDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Transaction History'),
+        content: const Text('No recent transactions found.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Close'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showChangePasswordDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Change Password'),
+        content: const Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              obscureText: true,
+              decoration: InputDecoration(labelText: 'Current Password'),
+            ),
+            SizedBox(height: 16),
+            TextField(
+              obscureText: true,
+              decoration: InputDecoration(labelText: 'New Password'),
+            ),
+            SizedBox(height: 16),
+            TextField(
+              obscureText: true,
+              decoration: InputDecoration(labelText: 'Confirm Password'),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Password updated successfully')),
+              );
+            },
+            child: const Text('Update'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showForgotPasswordDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Forgot Password'),
+        content: const Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text('Enter your email to reset password:'),
+            SizedBox(height: 16),
+            TextField(
+              decoration: InputDecoration(labelText: 'Email'),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Reset link sent to your email')),
+              );
+            },
+            child: const Text('Send Reset Link'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showNotificationDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Notification Settings'),
+        content: const Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('Push Notifications'),
+                Switch(value: true, onChanged: null),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('Email Notifications'),
+                Switch(value: false, onChanged: null),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('SMS Alerts'),
+                Switch(value: true, onChanged: null),
+              ],
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Close'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showLanguageDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Language'),
+        content: const Text('Current language: English\n\nOnly English is supported at this time.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Close'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showHelpDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Help & Support'),
+        content: const Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('• Contact Support: support@nutritrack.com'),
+            SizedBox(height: 8),
+            Text('• Phone: +1-800-NUTRI-TRACK'),
+            SizedBox(height: 8),
+            Text('• FAQ: Visit our website'),
+            SizedBox(height: 8),
+            Text('• App Version: 1.0.0'),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Close'),
+          ),
+        ],
+      ),
+    );
   }
 
   Future<void> _showLogoutDialog(
@@ -144,13 +347,12 @@ class SettingsScreen extends StatelessWidget {
             child: const Text('Cancel'),
           ),
           TextButton(
-            onPressed: () async {
+            onPressed: () {
               Navigator.of(context).pop();
-              await authState.logout();
-              // Navigate to login screen after logout
-              Navigator.pushNamedAndRemoveUntil(
+              authState.logout();
+              Navigator.pushAndRemoveUntil(
                 context,
-                '/login',
+                MaterialPageRoute(builder: (context) => const LoginScreen()),
                 (route) => false,
               );
             },

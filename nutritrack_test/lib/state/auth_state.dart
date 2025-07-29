@@ -25,10 +25,10 @@ class AuthState extends ChangeNotifier {
   User? get user => _auth.currentUser;
   bool get isLoggedIn => user != null;
 
-  // Initialize offline cache
+  // Initialize offline cache and restore session
   Future<void> init() async {
     if (user != null) {
-      await _loadUserDataFromCache();
+      await _loadUserData(user!.uid);
     }
   }
 
