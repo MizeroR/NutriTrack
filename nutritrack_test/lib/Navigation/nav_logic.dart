@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../Navigation/nav_state.dart';
-import '../widgets/custom_navbar.dart';
-import '../screens/home_screen.dart'; // first tab
+import '../widgets/bottom_nav_bar.dart'; // Updated import
+import '../screens/home_screen.dart';
 import '../screens/settings.dart';
 import '../screens/notifications_screen.dart';
 import '../Navigation/persistent_layout.dart';
-// import other future screens here as needed
 
 class MainScreen extends StatelessWidget {
   const MainScreen({super.key});
@@ -16,10 +15,10 @@ class MainScreen extends StatelessWidget {
     final navState = Provider.of<NavState>(context);
 
     final List<Widget> screens = [
-      HomeScreen(),
-      Placeholder(),
-      SettingsScreen(),
-      NotificationsScreen(),
+      const HomeScreen(),
+      Placeholder(), // Updated to use directly
+      const SettingsScreen(),
+      const NotificationsScreen(),
     ];
 
     return PersistentLayout(child: screens[navState.selectedIndex]);

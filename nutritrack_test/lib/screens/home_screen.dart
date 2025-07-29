@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../widgets/home_card.dart';
 import 'patients_dashboard.dart';
 import 'alert_management.dart';
+import 'reports_analytics_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -20,7 +21,7 @@ class HomeScreen extends StatelessWidget {
               Center(child: Image.asset('assets/images/logo.png', height: 50)),
               const SizedBox(height: 30),
               HomeCard(
-                assetPath: 'assets/images/icons/patient.png',
+                assetPath: 'assets/images/icons/patient2.png',
                 title: 'Patients Dashboard',
                 subtitle: 'Patient List Overview',
                 buttonLabel: 'Patient logs',
@@ -42,7 +43,12 @@ class HomeScreen extends StatelessWidget {
                 subtitle: 'Report To Doctor and schedule appointment',
                 buttonLabel: 'Doctor logs',
                 onTap: () {
-                  Navigator.pushNamed(context, '/reports_dashboard');
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const ReportsAnalyticsScreen(),
+                    ),
+                  );
                 },
               ),
               HomeCard(

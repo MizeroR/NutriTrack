@@ -10,17 +10,17 @@ import 'screens/patients_dashboard.dart';
 import 'screens/reports_dashboard.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:nutritrack_test/services/api_service.dart';
 import 'package:nutritrack_test/services/notification_service.dart';
+import '../navigation/persistent_layout.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  
+
   final authState = AuthState();
   await authState.init();
-  
+
   runApp(
     MultiProvider(
       providers: [
@@ -58,10 +58,12 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       routes: {
         '/wrapper': (context) => const AuthWrapper(),
-        '/home': (context) => MainScreen(),
+        '/home': (context) => const PersistentLayout(child: MainScreen()),
         '/signup': (context) => const SignUpScreen(),
-        '/patients_dashboard': (context) => const PatientsDashboard(),
-        '/reports_dashboard': (context) => const ReportsAnalyticsScreen(),
+        '/patients_dashboard': (context) =>
+            const PersistentLayout(child: PatientsDashboard()),
+        '/reports_dashboard': (context) =>
+            const PersistentLayout(child: ReportsAnalyticsScreen()),
       },
     );
   }

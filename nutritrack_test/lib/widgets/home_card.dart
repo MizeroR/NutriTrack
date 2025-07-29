@@ -40,8 +40,8 @@ class HomeCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Container(
-                width: 56,
-                height: 56,
+                width: 66,
+                height: 66,
                 decoration: BoxDecoration(
                   color: Colors.white,
                   shape: BoxShape.circle,
