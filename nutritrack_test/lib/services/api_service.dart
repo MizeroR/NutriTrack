@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import '../models/nutrition_summary.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class ApiService {
@@ -122,30 +123,6 @@ class ApiService {
     }
   }
 
-  // Get all alerts (not patient-specific)
-  // Future<List<dynamic>> getAlerts() async {
-  //   try {
-  //     final headers = await _getHeaders();
-  //     final response = await http.get(
-  //       Uri.parse('$_baseUrl/alerts'),
-  //       headers: headers,
-  //     );
-  //     print('Alerts API Response - Status: ${response.statusCode}');
-  //     print('Alerts API Response - Body: ${response.body}');
-
-  //     if (response.statusCode == 200) {
-  //       return jsonDecode(response.body);
-  //     } else {
-  //       throw Exception(
-  //         'Failed to load alerts - Status: ${response.statusCode}',
-  //       );
-  //     }
-  //   } catch (e) {
-  //     print('Error fetching alerts: $e');
-  //     throw Exception('Failed to load alerts: $e');
-  //   }
-  // }
-
   // Get SMS logs
   Future<List<dynamic>> getSmsLogs() async {
     final headers = await _getHeaders();
@@ -161,17 +138,61 @@ class ApiService {
     }
   }
 
-  // Send nutrition alert to patient
-  // Future<void> sendNutritionAlert(String patientId) async {
-  //   final headers = await _getHeaders();
-  //   final response = await http.post(
-  //     Uri.parse('$_baseUrl/send-alert'),
-  //     headers: headers,
-  //     body: jsonEncode({'patientId': patientId}),
-  //   );
+  // Get nutrition summary for a patient
+  Future<NutritionSummary> getNutritionSummary(
+    String patientId, {
+    int days = 7,
+  }) async {
+    final headers = await _getHeaders();
+    final response = await http.get(
+      Uri.parse('$_baseUrl/nutrition-summary/$patientId?days=$days'),
+      headers: headers,
+    );
 
-  //   if (response.statusCode != 200) {
-  //     throw Exception('Failed to send alert');
-  //   }
-  // }
+    if (response.statusCode == 200) {
+      return NutritionSummary.fromJson(jsonDecode(response.body));
+    } else {
+      throw Exception('Failed to load nutrition summary');
+    }
+  }
+
+  Future<void> sendNutritionAlert(String patientId) async {
+    final headers = await _getHeaders();
+    final response = await http.post(
+      Uri.parse('$_baseUrl/send-alert'),
+      headers: headers,
+      body: jsonEncode({'patientId': patientId}),
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception('Failed to send alert');
+    }
+  }
+
+  // In api_service.dart
+  Future<dynamic> post(
+    String endpoint, {
+    required Map<String, dynamic> body,
+  }) async {
+    final headers = await _getHeaders();
+
+    try {
+      final response = await http.post(
+        Uri.parse('$_baseUrl$endpoint'),
+        headers: {
+          ...headers,
+          'Content-Type': 'application/json', // Required for your backend
+        },
+        body: jsonEncode(body), // Matches your backend's JSON expectation
+      );
+
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+      } else {
+        throw Exception('API Error: ${response.statusCode} - ${response.body}');
+      }
+    } catch (e) {
+      throw Exception('Network Error: $e');
+    }
+  }
 }

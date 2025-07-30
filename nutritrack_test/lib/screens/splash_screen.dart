@@ -45,7 +45,7 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFA2DC90),
+      backgroundColor: const Color(0xFF91C788),
       body: SafeArea(
         child: Center(
           child: ScaleTransition(
@@ -53,7 +53,7 @@ class _SplashScreenState extends State<SplashScreen>
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Image.asset('assets/images/nutrimama_logo.png', height: 120),
+                Image.asset('assets/images/logo2.png', height: 120),
                 const SizedBox(height: 12),
                 const Text(
                   'NutriTrack',

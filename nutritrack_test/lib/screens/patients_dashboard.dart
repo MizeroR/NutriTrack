@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../models/patient.dart';
 import '../widgets/patient_card.dart';
 import '../services/api_service.dart';
+import 'patient_overview_screen.dart';
 import '../widgets/options_menu_sheet.dart';
 
 class PatientsDashboard extends StatefulWidget {
@@ -212,13 +213,14 @@ class _PatientsDashboardState extends State<PatientsDashboard> {
                 return PatientCard(
                   patient: _filteredPatients[index],
                   onTap: () {
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(
-                    //     builder: (_) =>
-                    //         PatientOverviewScreen(patient: _filteredPatients[index]),
-                    //   ),
-                    // );
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => PatientOverviewScreen(
+                          patient: _filteredPatients[index],
+                        ),
+                      ),
+                    );
                   },
                 );
               },
