@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nutritrack_test/Navigation/nav_logic.dart';
+import 'package:nutritrack_test/widgets/doctor_options.dart';
 import 'package:provider/provider.dart';
 import 'state/auth_state.dart';
 import 'screens/splash_screen.dart';
@@ -14,6 +15,7 @@ import 'package:nutritrack_test/services/notification_service.dart';
 import 'screens/reports_analytics_screen.dart';
 import 'screens/alert_management.dart';
 import '../widgets/options_menu_sheet.dart';
+// import 'screens/reports_dashboard.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -55,6 +57,15 @@ class MyApp extends StatelessWidget {
     );
   }
 
+  static void showAppointmentForm(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (_) => const OptionsMenuAppointment(),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -90,9 +101,7 @@ class MyApp extends StatelessWidget {
           floatingActionButton: FloatingActionButton(
             heroTag: 'reports_analytics_fab',
             backgroundColor: const Color(0xFF7BAC73),
-            onPressed: () {
-              // Action for the FAB
-            },
+            onPressed: () => showAppointmentForm(context),
             child: const Icon(Icons.add, size: 30),
           ),
           extendBody: true,

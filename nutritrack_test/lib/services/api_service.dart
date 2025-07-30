@@ -44,6 +44,27 @@ class ApiService {
     }
   }
 
+  // In api_service.dart
+  Future<List<dynamic>> getNotifications() async {
+    if (healthcareWorkerId == null) {
+      throw Exception('No healthcare worker ID');
+    }
+
+    final headers = await _getHeaders();
+    final response = await http.get(
+      Uri.parse(
+        '$_baseUrl/notifications?healthcareWorkerId=$healthcareWorkerId',
+      ),
+      headers: headers,
+    );
+
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      throw Exception('Failed to load notifications');
+    }
+  }
+
   // Register a new patient and send SMS
   // In api_service.dart
   Future<void> registerPatient(Map<String, dynamic> patientData) async {
@@ -120,6 +141,44 @@ class ApiService {
     } catch (e) {
       print('Error fetching alerts: $e');
       rethrow;
+    }
+  }
+
+  Future<void> registerAppointment(Map<String, dynamic> appointmentData) async {
+    final headers = await _getHeaders();
+    print('Sending appointment data: $appointmentData');
+    final response = await http.post(
+      Uri.parse('$_baseUrl/register-appointment'),
+      headers: {
+        ...headers,
+        'Content-Type': 'application/json', // Ensure content-type is set
+      },
+      body: jsonEncode(appointmentData),
+    );
+
+    if (response.statusCode != 201) {
+      print('Appointment creation failed: ${response.body}');
+      throw Exception('Failed to register appointment: ${response.body}');
+    }
+  }
+
+  Future<List<dynamic>> getHealthcareWorkerAppointments() async {
+    if (healthcareWorkerId == null) {
+      throw Exception('No healthcare worker ID');
+    }
+
+    final headers = await _getHeaders();
+    final response = await http.get(
+      Uri.parse(
+        '$_baseUrl/appointments?healthcareWorkerId=$healthcareWorkerId',
+      ),
+      headers: headers,
+    );
+
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      throw Exception('Failed to load appointments');
     }
   }
 
