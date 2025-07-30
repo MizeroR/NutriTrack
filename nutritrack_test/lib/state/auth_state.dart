@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
 class AuthState extends ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  final GoogleSignIn _googleSignIn = GoogleSignIn();
   final DatabaseReference _dbRef = FirebaseDatabase.instance.ref(
     'healthcare_workers',
   );
@@ -145,62 +143,21 @@ class AuthState extends ChangeNotifier {
     }
   }
 
-  // ================== Auth Methods ==================
-  Future<void> signInWithGoogle() async {
-    _setLoading(true);
-    try {
-      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
-      if (googleUser == null) {
-        _setLoading(false);
-        return;
-      }
 
-      final GoogleSignInAuthentication googleAuth =
-          await googleUser.authentication;
-
-      final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
-        idToken: googleAuth.idToken,
-      );
-
-      final userCredential = await _auth.signInWithCredential(credential);
-      if (userCredential.user != null) {
-        // Check if user exists in database, if not create profile
-        final snapshot = await _dbRef.child(userCredential.user!.uid).get();
-        if (!snapshot.exists) {
-          // Create basic profile for Google sign-in users
-          final userData = {
-            'name': userCredential.user!.displayName ?? 'Unknown',
-            'email': userCredential.user!.email ?? '',
-            'healthcareId': 'GOOGLE_${userCredential.user!.uid.substring(0, 8)}',
-            'facilityName': 'Not specified',
-            'role': 'Healthcare Worker',
-            'lastUpdated': ServerValue.timestamp,
-            'signInMethod': 'google',
-          };
-          await _dbRef.child(userCredential.user!.uid).set(userData);
-          await _cacheUserData(userCredential.user!.uid, userData);
-        } else {
-          await _loadUserData(userCredential.user!.uid);
-        }
-      }
-    } catch (e) {
-      _errorMessage = "Google sign-in failed: ${e.toString()}";
-    } finally {
-      _setLoading(false);
-    }
-  }
 
   Future<void> logout() async {
-    await _auth.signOut();
-    await _googleSignIn.signOut();
-    _currentUserData = null;
-
-    // Clear cached data
+    // Clear cached data first
     final prefs = await SharedPreferences.getInstance();
     if (user != null) {
       await prefs.remove('cachedUserData_${user!.uid}');
     }
+    
+    // Clear local state
+    _currentUserData = null;
+    _errorMessage = null;
+    
+    // Sign out from Firebase
+    await _auth.signOut();
 
     notifyListeners();
   }
