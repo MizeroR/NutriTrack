@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import '../widgets/category_card.dart';
 import '../widgets/doctor_card.dart';
-import '../widgets/bottom_nav_bar.dart';
 
 class ReportsAnalyticsScreen extends StatelessWidget {
   const ReportsAnalyticsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: SafeArea(
+    return Container(
+      // Changed from Scaffold
+      color: Colors.white,
+      child: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -23,7 +23,6 @@ class ReportsAnalyticsScreen extends StatelessWidget {
           ],
         ),
       ),
-      bottomNavigationBar: const CustomBottomNavBar(),
     );
   }
 

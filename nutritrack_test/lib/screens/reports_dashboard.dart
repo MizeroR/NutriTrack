@@ -70,7 +70,8 @@ class _ReportsAnalyticsScreenState extends State<ReportsAnalyticsScreen> {
                     'Gynecologist',
                     Icons.medical_services,
                     selected: _selectedCategory == 'Gynecologist',
-                    onTap: () => setState(() => _selectedCategory = 'Gynecologist'),
+                    onTap: () =>
+                        setState(() => _selectedCategory = 'Gynecologist'),
                   ),
                   const SizedBox(width: 16),
                   _buildCategoryCard(
@@ -84,7 +85,8 @@ class _ReportsAnalyticsScreenState extends State<ReportsAnalyticsScreen> {
                     'Psychologist',
                     Icons.psychology,
                     selected: _selectedCategory == 'Psychologist',
-                    onTap: () => setState(() => _selectedCategory = 'Psychologist'),
+                    onTap: () =>
+                        setState(() => _selectedCategory = 'Psychologist'),
                   ),
                 ],
               ),
@@ -104,9 +106,7 @@ class _ReportsAnalyticsScreenState extends State<ReportsAnalyticsScreen> {
             ),
             const SizedBox(height: 16),
             // Dynamic content based on selected category
-            Expanded(
-              child: _buildCategoryContent(),
-            ),
+            Expanded(child: _buildCategoryContent()),
           ],
         ),
       ),
@@ -196,7 +196,11 @@ class _ReportsAnalyticsScreenState extends State<ReportsAnalyticsScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(icon, size: 32, color: selected ? Color(0xFF7BAC73) : Colors.black),
+              Icon(
+                icon,
+                size: 32,
+                color: selected ? Color(0xFF7BAC73) : Colors.black,
+              ),
               const SizedBox(height: 8),
               Text(
                 title,
@@ -319,11 +323,31 @@ class _ReportsAnalyticsScreenState extends State<ReportsAnalyticsScreen> {
 
   Widget _buildMedicineContent() {
     final medicines = [
-      {'name': 'Prenatal Vitamins', 'description': 'Essential vitamins for pregnancy', 'dosage': 'Once daily'},
-      {'name': 'Folic Acid', 'description': 'Prevents birth defects', 'dosage': '400-800 mcg daily'},
-      {'name': 'Iron Supplements', 'description': 'Prevents anemia during pregnancy', 'dosage': '27mg daily'},
-      {'name': 'Calcium', 'description': 'Supports bone development', 'dosage': '1000mg daily'},
-      {'name': 'DHA Omega-3', 'description': 'Brain development support', 'dosage': '200-300mg daily'},
+      {
+        'name': 'Prenatal Vitamins',
+        'description': 'Essential vitamins for pregnancy',
+        'dosage': 'Once daily',
+      },
+      {
+        'name': 'Folic Acid',
+        'description': 'Prevents birth defects',
+        'dosage': '400-800 mcg daily',
+      },
+      {
+        'name': 'Iron Supplements',
+        'description': 'Prevents anemia during pregnancy',
+        'dosage': '27mg daily',
+      },
+      {
+        'name': 'Calcium',
+        'description': 'Supports bone development',
+        'dosage': '1000mg daily',
+      },
+      {
+        'name': 'DHA Omega-3',
+        'description': 'Brain development support',
+        'dosage': '200-300mg daily',
+      },
     ];
 
     return ListView.builder(
@@ -355,7 +379,11 @@ class _ReportsAnalyticsScreenState extends State<ReportsAnalyticsScreen> {
                   color: Color(0xFF7BAC73).withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(14),
                 ),
-                child: Icon(Icons.medication, size: 32, color: Color(0xFF7BAC73)),
+                child: Icon(
+                  Icons.medication,
+                  size: 32,
+                  color: Color(0xFF7BAC73),
+                ),
               ),
               const SizedBox(width: 16),
               Expanded(
@@ -382,7 +410,10 @@ class _ReportsAnalyticsScreenState extends State<ReportsAnalyticsScreen> {
                         const SizedBox(width: 4),
                         Text(
                           medicine['dosage']!,
-                          style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.grey[600],
+                          ),
                         ),
                       ],
                     ),
@@ -402,11 +433,7 @@ class _ReportsAnalyticsScreenState extends State<ReportsAnalyticsScreen> {
       child: Column(
         children: [
           const SizedBox(height: 40),
-          Icon(
-            Icons.psychology_outlined,
-            size: 80,
-            color: Colors.grey[400],
-          ),
+          Icon(Icons.psychology_outlined, size: 80, color: Colors.grey[400]),
           const SizedBox(height: 24),
           Text(
             'No Psychologists Added',
@@ -420,10 +447,7 @@ class _ReportsAnalyticsScreenState extends State<ReportsAnalyticsScreen> {
           Text(
             'Add mental health professionals to support your patients',
             textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 14,
-              color: Colors.grey[500],
-            ),
+            style: TextStyle(fontSize: 14, color: Colors.grey[500]),
           ),
           const SizedBox(height: 32),
           ElevatedButton.icon(
@@ -434,7 +458,9 @@ class _ReportsAnalyticsScreenState extends State<ReportsAnalyticsScreen> {
               backgroundColor: Color(0xFF7BAC73),
               foregroundColor: Colors.white,
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
             ),
           ),
         ],
@@ -488,7 +514,9 @@ class _ReportsAnalyticsScreenState extends State<ReportsAnalyticsScreen> {
             onPressed: () {
               Navigator.pop(context);
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('${nameController.text} added successfully')),
+                SnackBar(
+                  content: Text('${nameController.text} added successfully'),
+                ),
               );
             },
             style: ElevatedButton.styleFrom(backgroundColor: Color(0xFF7BAC73)),

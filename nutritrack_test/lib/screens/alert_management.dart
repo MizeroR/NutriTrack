@@ -47,32 +47,40 @@ class _AlertManagementScreenState extends State<AlertManagementScreen>
       });
     } catch (e) {
       setState(() => _isLoading = false);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error loading alerts: $e')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Error loading alerts: $e')));
     }
   }
 
   List<NotificationModel> get _filteredAlerts {
     var filtered = _alerts;
-    
+
     if (_selectedFilter != 'All') {
-      filtered = filtered.where((alert) => 
-        alert.type.toString().toLowerCase().contains(_selectedFilter.toLowerCase())
-      ).toList();
+      filtered = filtered
+          .where(
+            (alert) => alert.type.toString().toLowerCase().contains(
+              _selectedFilter.toLowerCase(),
+            ),
+          )
+          .toList();
     }
-    
+
     if (_selectedPriority != 'All') {
-      filtered = filtered.where((alert) => 
-        _getPriority(alert).toLowerCase() == _selectedPriority.toLowerCase()
-      ).toList();
+      filtered = filtered
+          .where(
+            (alert) =>
+                _getPriority(alert).toLowerCase() ==
+                _selectedPriority.toLowerCase(),
+          )
+          .toList();
     }
-    
+
     return filtered;
   }
 
   String _getPriority(NotificationModel alert) {
-    if (alert.message.toLowerCase().contains('critical') || 
+    if (alert.message.toLowerCase().contains('critical') ||
         alert.message.toLowerCase().contains('urgent')) {
       return 'High';
     } else if (alert.message.toLowerCase().contains('moderate')) {
@@ -137,17 +145,17 @@ class _AlertManagementScreenState extends State<AlertManagementScreen>
           child: _isLoading
               ? const Center(child: CircularProgressIndicator())
               : _filteredAlerts.isEmpty
-                  ? _buildEmptyState()
-                  : RefreshIndicator(
-                      onRefresh: _loadAlerts,
-                      child: ListView.builder(
-                        padding: const EdgeInsets.all(16),
-                        itemCount: _filteredAlerts.length,
-                        itemBuilder: (context, index) {
-                          return _buildAlertCard(_filteredAlerts[index]);
-                        },
-                      ),
-                    ),
+              ? _buildEmptyState()
+              : RefreshIndicator(
+                  onRefresh: _loadAlerts,
+                  child: ListView.builder(
+                    padding: const EdgeInsets.all(16),
+                    itemCount: _filteredAlerts.length,
+                    itemBuilder: (context, index) {
+                      return _buildAlertCard(_filteredAlerts[index]);
+                    },
+                  ),
+                ),
         ),
       ],
     );
@@ -168,13 +176,16 @@ class _AlertManagementScreenState extends State<AlertManagementScreen>
               decoration: const InputDecoration(
                 labelText: 'Filter by Type',
                 border: OutlineInputBorder(),
-                contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                contentPadding: EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 8,
+                ),
               ),
               items: ['All', 'Nutrition', 'Medical', 'Follow-up', 'Emergency']
-                  .map((filter) => DropdownMenuItem(
-                        value: filter,
-                        child: Text(filter),
-                      ))
+                  .map(
+                    (filter) =>
+                        DropdownMenuItem(value: filter, child: Text(filter)),
+                  )
                   .toList(),
               onChanged: (value) {
                 setState(() => _selectedFilter = value!);
@@ -188,13 +199,18 @@ class _AlertManagementScreenState extends State<AlertManagementScreen>
               decoration: const InputDecoration(
                 labelText: 'Priority',
                 border: OutlineInputBorder(),
-                contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                contentPadding: EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 8,
+                ),
               ),
               items: ['All', 'High', 'Medium', 'Low']
-                  .map((priority) => DropdownMenuItem(
-                        value: priority,
-                        child: Text(priority),
-                      ))
+                  .map(
+                    (priority) => DropdownMenuItem(
+                      value: priority,
+                      child: Text(priority),
+                    ),
+                  )
                   .toList(),
               onChanged: (value) {
                 setState(() => _selectedPriority = value!);
@@ -208,11 +224,11 @@ class _AlertManagementScreenState extends State<AlertManagementScreen>
 
   Widget _buildAlertCard(NotificationModel alert) {
     final priority = _getPriority(alert);
-    final priorityColor = priority == 'High' 
-        ? Colors.red 
-        : priority == 'Medium' 
-            ? Colors.orange 
-            : Colors.green;
+    final priorityColor = priority == 'High'
+        ? Colors.red
+        : priority == 'Medium'
+        ? Colors.orange
+        : Colors.green;
 
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
@@ -226,7 +242,10 @@ class _AlertManagementScreenState extends State<AlertManagementScreen>
             Row(
               children: [
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 4,
+                  ),
                   decoration: BoxDecoration(
                     color: priorityColor.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(12),
@@ -243,28 +262,19 @@ class _AlertManagementScreenState extends State<AlertManagementScreen>
                 const Spacer(),
                 Text(
                   DateFormat('MMM dd, HH:mm').format(alert.createdAt),
-                  style: TextStyle(
-                    color: Colors.grey.shade600,
-                    fontSize: 12,
-                  ),
+                  style: TextStyle(color: Colors.grey.shade600, fontSize: 12),
                 ),
               ],
             ),
             const SizedBox(height: 8),
             Text(
               alert.title,
-              style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-              ),
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 4),
             Text(
               alert.message,
-              style: TextStyle(
-                color: Colors.grey.shade700,
-                fontSize: 14,
-              ),
+              style: TextStyle(color: Colors.grey.shade700, fontSize: 14),
             ),
             const SizedBox(height: 12),
             Row(
@@ -357,7 +367,12 @@ class _AlertManagementScreenState extends State<AlertManagementScreen>
     );
   }
 
-  Widget _buildRuleCard(String title, String description, IconData icon, bool isActive) {
+  Widget _buildRuleCard(
+    String title,
+    String description,
+    IconData icon,
+    bool isActive,
+  ) {
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
       child: ListTile(
@@ -369,7 +384,9 @@ class _AlertManagementScreenState extends State<AlertManagementScreen>
           onChanged: (value) {
             setState(() {});
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('${title} ${value ? 'enabled' : 'disabled'}')),
+              SnackBar(
+                content: Text('${title} ${value ? 'enabled' : 'disabled'}'),
+              ),
             );
           },
           activeColor: const Color(0xFF91C788),
@@ -381,9 +398,9 @@ class _AlertManagementScreenState extends State<AlertManagementScreen>
   Widget _buildStatisticsTab() {
     final totalAlerts = _alerts.length;
     final highPriority = _alerts.where((a) => _getPriority(a) == 'High').length;
-    final resolvedToday = _alerts.where((a) => 
-      a.createdAt.day == DateTime.now().day
-    ).length;
+    final resolvedToday = _alerts
+        .where((a) => a.createdAt.day == DateTime.now().day)
+        .length;
 
     return Padding(
       padding: const EdgeInsets.all(16),
@@ -397,17 +414,45 @@ class _AlertManagementScreenState extends State<AlertManagementScreen>
           const SizedBox(height: 16),
           Row(
             children: [
-              Expanded(child: _buildStatCard('Total Alerts', totalAlerts.toString(), Icons.notifications, Colors.blue)),
+              Expanded(
+                child: _buildStatCard(
+                  'Total Alerts',
+                  totalAlerts.toString(),
+                  Icons.notifications,
+                  Colors.blue,
+                ),
+              ),
               const SizedBox(width: 12),
-              Expanded(child: _buildStatCard('High Priority', highPriority.toString(), Icons.priority_high, Colors.red)),
+              Expanded(
+                child: _buildStatCard(
+                  'High Priority',
+                  highPriority.toString(),
+                  Icons.priority_high,
+                  Colors.red,
+                ),
+              ),
             ],
           ),
           const SizedBox(height: 12),
           Row(
             children: [
-              Expanded(child: _buildStatCard('Today', resolvedToday.toString(), Icons.today, Colors.green)),
+              Expanded(
+                child: _buildStatCard(
+                  'Today',
+                  resolvedToday.toString(),
+                  Icons.today,
+                  Colors.green,
+                ),
+              ),
               const SizedBox(width: 12),
-              Expanded(child: _buildStatCard('Response Time', '12 min', Icons.timer, Colors.orange)),
+              Expanded(
+                child: _buildStatCard(
+                  'Response Time',
+                  '12 min',
+                  Icons.timer,
+                  Colors.orange,
+                ),
+              ),
             ],
           ),
           const SizedBox(height: 24),
@@ -422,9 +467,21 @@ class _AlertManagementScreenState extends State<AlertManagementScreen>
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                   ),
                   const SizedBox(height: 12),
-                  _buildActivityItem('Alert resolved', 'Nutrition concern for Patient #123', '2 min ago'),
-                  _buildActivityItem('New alert', 'Missed check-in for Patient #456', '15 min ago'),
-                  _buildActivityItem('Rule updated', 'Modified follow-up reminder settings', '1 hour ago'),
+                  _buildActivityItem(
+                    'Alert resolved',
+                    'Nutrition concern for Patient #123',
+                    '2 min ago',
+                  ),
+                  _buildActivityItem(
+                    'New alert',
+                    'Missed check-in for Patient #456',
+                    '15 min ago',
+                  ),
+                  _buildActivityItem(
+                    'Rule updated',
+                    'Modified follow-up reminder settings',
+                    '1 hour ago',
+                  ),
                 ],
               ),
             ),
@@ -434,7 +491,12 @@ class _AlertManagementScreenState extends State<AlertManagementScreen>
     );
   }
 
-  Widget _buildStatCard(String title, String value, IconData icon, Color color) {
+  Widget _buildStatCard(
+    String title,
+    String value,
+    IconData icon,
+    Color color,
+  ) {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -475,12 +537,21 @@ class _AlertManagementScreenState extends State<AlertManagementScreen>
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(action, style: const TextStyle(fontWeight: FontWeight.w600)),
-                Text(description, style: TextStyle(color: Colors.grey.shade600, fontSize: 12)),
+                Text(
+                  action,
+                  style: const TextStyle(fontWeight: FontWeight.w600),
+                ),
+                Text(
+                  description,
+                  style: TextStyle(color: Colors.grey.shade600, fontSize: 12),
+                ),
               ],
             ),
           ),
-          Text(time, style: TextStyle(color: Colors.grey.shade500, fontSize: 11)),
+          Text(
+            time,
+            style: TextStyle(color: Colors.grey.shade500, fontSize: 11),
+          ),
         ],
       ),
     );
@@ -491,11 +562,7 @@ class _AlertManagementScreenState extends State<AlertManagementScreen>
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            Icons.notifications_off,
-            size: 64,
-            color: Colors.grey.shade400,
-          ),
+          Icon(Icons.notifications_off, size: 64, color: Colors.grey.shade400),
           const SizedBox(height: 16),
           Text(
             'No Active Alerts',
@@ -527,7 +594,9 @@ class _AlertManagementScreenState extends State<AlertManagementScreen>
           children: [
             Text('Priority: ${_getPriority(alert)}'),
             const SizedBox(height: 8),
-            Text('Time: ${DateFormat('MMM dd, yyyy HH:mm').format(alert.createdAt)}'),
+            Text(
+              'Time: ${DateFormat('MMM dd, yyyy HH:mm').format(alert.createdAt)}',
+            ),
             const SizedBox(height: 8),
             Text('Message: ${alert.message}'),
           ],
@@ -542,7 +611,9 @@ class _AlertManagementScreenState extends State<AlertManagementScreen>
               Navigator.pop(context);
               _resolveAlert(alert);
             },
-            style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF91C788)),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF91C788),
+            ),
             child: const Text('Resolve', style: TextStyle(color: Colors.white)),
           ),
         ],
@@ -592,10 +663,14 @@ class _AlertManagementScreenState extends State<AlertManagementScreen>
             onPressed: () {
               Navigator.pop(context);
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Alert rule created successfully')),
+                const SnackBar(
+                  content: Text('Alert rule created successfully'),
+                ),
               );
             },
-            style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF91C788)),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF91C788),
+            ),
             child: const Text('Create', style: TextStyle(color: Colors.white)),
           ),
         ],
