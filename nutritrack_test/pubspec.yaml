@@ -32,13 +32,8 @@ dependencies:
     sdk: flutter
   provider: ^6.1.5
   firebase_core: ^4.0.0
-  firebase_core_dart:
-<<<<<<< HEAD
   firebase_auth: ^6.0.0
   google_sign_in: ^7.1.1
-=======
-  firebase_auth: ^5.7.0
->>>>>>> 34ba9e9f95bc5af12f9394dcbeb86b242e94fed0
   shared_preferences: ^2.0.13
   firebase_database: ^12.0.0
   intl: ^0.20.2
