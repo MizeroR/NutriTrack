@@ -4,6 +4,8 @@ import '../state/auth_state.dart';
 import '../widgets/settings_item.dart';
 import '../widgets/settings_section.dart';
 import 'login_screen.dart';
+import '../services/settings_service.dart';
+import '../screens/splash_screen.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -84,6 +86,46 @@ class SettingsScreen extends StatelessWidget {
                 title: 'General',
                 showDivider: false,
                 children: [
+                  // Add this new toggle item
+                  Consumer<SettingsService>(
+                    builder: (context, settings, child) {
+                      return FutureBuilder<bool>(
+                        future: settings.isDarkMode(),
+                        builder: (context, snapshot) {
+                          final isDarkMode = snapshot.data ?? false;
+                          return SettingsItem(
+                            icon: Icons.dark_mode_outlined,
+                            title: 'Dark Mode',
+                            showTrailingIcon: false,
+                            onTap: null, // Disable tap, only toggle works
+                            trailing: Switch(
+                              value: isDarkMode,
+                              onChanged: (value) async {
+                                await settings.setDarkMode(value);
+                                if (context.mounted) {
+                                  Navigator.of(context).pushAndRemoveUntil(
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          const SplashScreen(),
+                                    ),
+                                    (route) => false,
+                                  );
+                                }
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      'Dark mode ${value ? 'enabled' : 'disabled'}',
+                                    ),
+                                    duration: Duration(seconds: 1),
+                                  ),
+                                );
+                              },
+                            ),
+                          );
+                        },
+                      );
+                    },
+                  ),
                   SettingsItem(
                     icon: Icons.notifications_outlined,
                     title: 'Notification',
@@ -139,7 +181,9 @@ class SettingsScreen extends StatelessWidget {
             const SizedBox(height: 8),
             Text('Email: ${authState.user?.email ?? 'N/A'}'),
             const SizedBox(height: 8),
-            Text('Healthcare ID: ${authState.currentUserData?['healthcareId'] ?? 'N/A'}'),
+            Text(
+              'Healthcare ID: ${authState.currentUserData?['healthcareId'] ?? 'N/A'}',
+            ),
             const SizedBox(height: 8),
             Text('Role: ${authState.currentUserData?['role'] ?? 'N/A'}'),
           ],
@@ -223,9 +267,7 @@ class SettingsScreen extends StatelessWidget {
           children: [
             Text('Enter your email to reset password:'),
             SizedBox(height: 16),
-            TextField(
-              decoration: InputDecoration(labelText: 'Email'),
-            ),
+            TextField(decoration: InputDecoration(labelText: 'Email')),
           ],
         ),
         actions: [
@@ -293,7 +335,9 @@ class SettingsScreen extends StatelessWidget {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Language'),
-        content: const Text('Current language: English\n\nOnly English is supported at this time.'),
+        content: const Text(
+          'Current language: English\n\nOnly English is supported at this time.',
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),

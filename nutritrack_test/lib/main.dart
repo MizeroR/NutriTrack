@@ -15,6 +15,8 @@ import 'package:nutritrack_test/services/notification_service.dart';
 import 'screens/reports_analytics_screen.dart';
 import 'screens/alert_management.dart';
 import '../widgets/options_menu_sheet.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'services/settings_service.dart';
 // import 'screens/reports_dashboard.dart';
 
 void main() async {
@@ -23,12 +25,15 @@ void main() async {
 
   final authState = AuthState();
   await authState.init();
+  final settingsService = SettingsService();
+  final isDarkMode = await settingsService.isDarkMode();
 
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider.value(value: authState),
         ChangeNotifierProvider(create: (_) => NavState()),
+        Provider.value(value: settingsService),
         ProxyProvider<AuthState, ApiService>(
           update: (context, authState, _) {
             final hcwId = authState.currentUserData?['healthcareId'];
@@ -40,13 +45,14 @@ void main() async {
           update: (context, apiService, _) => NotificationService(apiService),
         ),
       ],
-      child: const MyApp(),
+      child: MyApp(isDarkMode: isDarkMode),
     ),
   );
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final bool isDarkMode;
+  const MyApp({super.key, required this.isDarkMode});
 
   static void showOptionsMenu(BuildContext context) {
     showModalBottomSheet(
@@ -70,11 +76,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'NutriTrack Mama',
-      theme: ThemeData(
-        primarySwatch: Colors.green,
-        useMaterial3: true,
-        fontFamily: 'SF Pro Display',
-      ),
+      theme: _buildLightTheme(),
+      darkTheme: _buildDarkTheme(),
+      themeMode: isDarkMode ? ThemeMode.dark : ThemeMode.light,
       home: const SplashScreen(),
       debugShowCheckedModeBanner: false,
       routes: {
@@ -108,6 +112,26 @@ class MyApp extends StatelessWidget {
         ),
         '/alert_management': (context) => const AlertManagementScreen(),
       },
+    );
+  }
+
+  ThemeData _buildLightTheme() {
+    return ThemeData(
+      primarySwatch: Colors.green,
+      useMaterial3: true,
+      fontFamily: 'SF Pro Display',
+      brightness: Brightness.light,
+    );
+  }
+
+  ThemeData _buildDarkTheme() {
+    return ThemeData(
+      primarySwatch: Colors.green,
+      useMaterial3: true,
+      fontFamily: 'SF Pro Display',
+      brightness: Brightness.dark,
+      scaffoldBackgroundColor: Colors.grey[900],
+      cardColor: Colors.grey[800],
     );
   }
 }

@@ -8,14 +8,13 @@ class ReportsAnalyticsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      // Changed from Scaffold
       color: Colors.white,
       child: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 24),
-            _buildTopBar(),
+            _buildTopBar(context),
             const SizedBox(height: 16),
             _buildCategorySection(),
             const SizedBox(height: 24),
@@ -26,15 +25,18 @@ class ReportsAnalyticsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildTopBar() {
+  Widget _buildTopBar(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24),
       child: Row(
         children: [
-          const Icon(
-            Icons.arrow_back_ios_new,
-            color: Color(0xFF7BAC73),
-            size: 20,
+          IconButton(
+            icon: const Icon(
+              Icons.arrow_back_ios_new,
+              color: Color(0xFF7BAC73),
+              size: 20,
+            ),
+            onPressed: () => Navigator.pop(context),
           ),
           const SizedBox(width: 8),
           const Text(

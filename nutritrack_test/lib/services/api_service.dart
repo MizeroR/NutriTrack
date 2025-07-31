@@ -4,7 +4,9 @@ import '../models/nutrition_summary.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class ApiService {
-  static const String _baseUrl = 'http://localhost:3000';
+  // static const String _baseUrl = 'http://localhost:3000';
+  static const String _baseUrl = 'https://3b027c08e174.ngrok-free.app';
+
   final String? healthcareWorkerId;
 
   ApiService({this.healthcareWorkerId});
@@ -22,6 +24,7 @@ class ApiService {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
       'Authorization': 'Bearer $token',
+      'ngrok-skip-browser-warning': 'true',
     };
   }
 

@@ -385,7 +385,7 @@ class _AlertManagementScreenState extends State<AlertManagementScreen>
             setState(() {});
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text('${title} ${value ? 'enabled' : 'disabled'}'),
+                content: Text('$title ${value ? 'enabled' : 'disabled'}'),
               ),
             );
           },

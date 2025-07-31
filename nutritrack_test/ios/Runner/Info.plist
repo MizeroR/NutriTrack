@@ -45,5 +45,9 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>NSDocumentsFolderUsageDescription</key>
+	<string>Need access to save reports</string>
+	<key>NSDownloadsFolderUsageDescription</key>
+	<string>Need access to save reports</string>
 </dict>
 </plist>

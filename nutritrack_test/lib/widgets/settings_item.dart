@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 class SettingsItem extends StatelessWidget {
   final IconData icon;
   final String title;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
   final bool showTrailingIcon;
+  final Widget? trailing;
 
   const SettingsItem({
     super.key,
@@ -12,6 +13,7 @@ class SettingsItem extends StatelessWidget {
     required this.title,
     required this.onTap,
     this.showTrailingIcon = true,
+    this.trailing,
   });
 
   @override
@@ -35,8 +37,14 @@ class SettingsItem extends StatelessWidget {
                 ),
               ),
             ),
-            if (showTrailingIcon)
-              Icon(Icons.arrow_forward_ios, color: Colors.grey[400], size: 16),
+            trailing ??
+                (showTrailingIcon
+                    ? Icon(
+                        Icons.arrow_forward_ios,
+                        color: Colors.grey[400],
+                        size: 16,
+                      )
+                    : const SizedBox.shrink()),
           ],
         ),
       ),

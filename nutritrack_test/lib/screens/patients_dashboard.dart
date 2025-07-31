@@ -74,13 +74,9 @@ class _PatientsDashboardState extends State<PatientsDashboard> {
           AppBar(
             backgroundColor: Colors.white,
             elevation: 0,
-            leading: Container(
-              margin: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: Colors.green.shade100,
-                shape: BoxShape.circle,
-              ),
-              child: const Icon(Icons.person_outline, color: Colors.green),
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back, color: Colors.green),
+              onPressed: () => Navigator.pop(context),
             ),
             title: const Text(
               'Patients Dashboard',
