@@ -89,17 +89,19 @@ class _LoginScreenState extends State<LoginScreen> {
         ElevatedButton(
           onPressed: () async {
             final email = emailController.text.trim();
+            final scaffoldMessenger = ScaffoldMessenger.of(context);
+            final navigator = Navigator.of(context);
             
             // Validate email
             if (email.isEmpty) {
-              ScaffoldMessenger.of(context).showSnackBar(
+              scaffoldMessenger.showSnackBar(
                 const SnackBar(content: Text('Please enter your email')),
               );
               return;
             }
             
             if (!email.contains('@') || !email.contains('.')) {
-              ScaffoldMessenger.of(context).showSnackBar(
+              scaffoldMessenger.showSnackBar(
                 const SnackBar(content: Text('Please enter a valid email')),
               );
               return;
@@ -107,12 +109,12 @@ class _LoginScreenState extends State<LoginScreen> {
             
             try {
               // Show loading
-              Navigator.pop(context); // Close dialog first
+              navigator.pop(); // Close dialog first
               
               await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
               
               // Show success message
-              ScaffoldMessenger.of(context).showSnackBar(
+              scaffoldMessenger.showSnackBar(
                 const SnackBar(
                   content: Text('Password reset email sent! Check your inbox.'),
                   backgroundColor: Colors.green,
@@ -120,7 +122,7 @@ class _LoginScreenState extends State<LoginScreen> {
               );
             } catch (e) {
               // Show error message
-              ScaffoldMessenger.of(context).showSnackBar(
+              scaffoldMessenger.showSnackBar(
                 SnackBar(
                   content: Text('Error: ${_getFirebaseErrorMessage(e.toString())}'),
                   backgroundColor: Colors.red,

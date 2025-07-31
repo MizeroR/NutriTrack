@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../state/auth_state.dart';
 import '../services/notification_service.dart';
 import '../services/api_service.dart';
 import '../models/notification_model.dart';
@@ -37,7 +36,6 @@ class _AlertManagementScreenState extends State<AlertManagementScreen>
   Future<void> _loadAlerts() async {
     setState(() => _isLoading = true);
     try {
-      final authState = Provider.of<AuthState>(context, listen: false);
       final apiService = Provider.of<ApiService>(context, listen: false);
       final notificationService = NotificationService(apiService);
       final alerts = await notificationService.getNotifications();
@@ -47,9 +45,11 @@ class _AlertManagementScreenState extends State<AlertManagementScreen>
       });
     } catch (e) {
       setState(() => _isLoading = false);
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('Error loading alerts: $e')));
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error loading alerts: $e')));
+      }
     }
   }
 

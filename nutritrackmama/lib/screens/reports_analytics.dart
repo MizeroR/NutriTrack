@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 
 class ReportsAnalyticsScreen extends StatelessWidget {
@@ -17,7 +19,11 @@ class ReportsAnalyticsScreen extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 24),
               child: Row(
                 children: [
-                  Icon(Icons.arrow_back_ios_new, color: Color(0xFF7BAC73), size: 20),
+                  Icon(
+                    Icons.arrow_back_ios_new,
+                    color: Color(0xFF7BAC73),
+                    size: 20,
+                  ),
                   const SizedBox(width: 8),
                   Text(
                     'Reports and analytics',
@@ -46,7 +52,7 @@ class ReportsAnalyticsScreen extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             // Category cards
-            Container(
+            SizedBox(
               height: 80,
               child: ListView(
                 scrollDirection: Axis.horizontal,
@@ -138,7 +144,11 @@ class ReportsAnalyticsScreen extends StatelessWidget {
                 Icon(Icons.home_outlined, color: Colors.grey[600], size: 28),
                 Icon(Icons.phone_outlined, color: Colors.grey[600], size: 28),
                 SizedBox(width: 56), // Space for FAB
-                Icon(Icons.notifications_outlined, color: Colors.grey[600], size: 28),
+                Icon(
+                  Icons.notifications_outlined,
+                  color: Colors.grey[600],
+                  size: 28,
+                ),
                 Icon(Icons.person_outline, color: Colors.grey[600], size: 28),
               ],
             ),
@@ -174,7 +184,11 @@ class ReportsAnalyticsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildCategoryCard(String title, String imagePath, {bool selected = false}) {
+  Widget _buildCategoryCard(
+    String title,
+    String imagePath, {
+    bool selected = false,
+  }) {
     return Container(
       width: 100,
       height: 80,
@@ -190,12 +204,7 @@ class ReportsAnalyticsScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset(
-              imagePath,
-              width: 32,
-              height: 32,
-              fit: BoxFit.contain,
-            ),
+            Image.asset(imagePath, width: 32, height: 32, fit: BoxFit.contain),
             const SizedBox(height: 8),
             Text(
               title,
@@ -212,7 +221,12 @@ class ReportsAnalyticsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildDoctorCard(String name, String specialty, String time, String imagePath) {
+  Widget _buildDoctorCard(
+    String name,
+    String specialty,
+    String time,
+    String imagePath,
+  ) {
     return Container(
       padding: const EdgeInsets.all(16),
       margin: const EdgeInsets.only(bottom: 0),
@@ -255,10 +269,7 @@ class ReportsAnalyticsScreen extends StatelessWidget {
                 const SizedBox(height: 4),
                 Text(
                   specialty,
-                  style: TextStyle(
-                    fontSize: 13,
-                    color: Colors.grey[600],
-                  ),
+                  style: TextStyle(fontSize: 13, color: Colors.grey[600]),
                 ),
                 const SizedBox(height: 8),
                 Row(
@@ -267,10 +278,7 @@ class ReportsAnalyticsScreen extends StatelessWidget {
                     const SizedBox(width: 4),
                     Text(
                       time,
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey[600],
-                      ),
+                      style: TextStyle(fontSize: 12, color: Colors.grey[600]),
                     ),
                   ],
                 ),

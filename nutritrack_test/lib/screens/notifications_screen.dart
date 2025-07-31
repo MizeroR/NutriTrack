@@ -15,7 +15,6 @@ class NotificationsScreen extends StatefulWidget {
 
 class _NotificationsScreenState extends State<NotificationsScreen> {
   late Future<List<NotificationModel>> _notificationsFuture;
-  late NotificationService _notificationService;
 
   @override
   void initState() {

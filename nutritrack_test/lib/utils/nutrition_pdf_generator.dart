@@ -19,7 +19,7 @@ class NutritionPdfGenerator {
             pw.Text('Generated on: ${dateFormat.format(DateTime.now())}'),
             pw.Divider(),
             pw.Header(level: 1, child: pw.Text('Nutrition Intake')),
-            pw.Table.fromTextArray(
+            pw.TableHelper.fromTextArray(
               headers: ['Nutrient', 'Consumed', 'Target', '% Met'],
               data: [
                 [

@@ -15,7 +15,6 @@ import 'package:nutritrack_test/services/notification_service.dart';
 import 'screens/reports_analytics_screen.dart';
 import 'screens/alert_management.dart';
 import '../widgets/options_menu_sheet.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'services/settings_service.dart';
 // import 'screens/reports_dashboard.dart';
 
@@ -37,6 +36,7 @@ void main() async {
         ProxyProvider<AuthState, ApiService>(
           update: (context, authState, _) {
             final hcwId = authState.currentUserData?['healthcareId'];
+            // ignore: avoid_print
             print('Creating ApiService with healthcareWorkerId: $hcwId');
             return ApiService(healthcareWorkerId: hcwId);
           },

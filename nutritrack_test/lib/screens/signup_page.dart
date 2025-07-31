@@ -322,6 +322,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   onPressed: authState.isLoading
                       ? null
                       : () async {
+                          final navigator = Navigator.of(context);
+                          final scaffoldMessenger = ScaffoldMessenger.of(context);
+                          
                           if (_formKey.currentState!.validate() && _selectedRole != null) {
                             await authState.register(
                               _nameController.text.trim(),
@@ -332,10 +335,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               _selectedRole!,
                             );
                             if (authState.isLoggedIn && mounted) {
-                              Navigator.pushReplacementNamed(context, '/home');
+                              navigator.pushReplacementNamed('/home');
                             }
                           } else if (_selectedRole == null) {
-                            ScaffoldMessenger.of(context).showSnackBar(
+                            scaffoldMessenger.showSnackBar(
                               const SnackBar(content: Text('Please select your role')),
                             );
                           }

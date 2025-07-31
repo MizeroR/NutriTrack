@@ -1,9 +1,11 @@
 // services/notification_service.dart
 import '../models/notification_model.dart';
 import '../services/api_service.dart';
+import 'package:logger/logger.dart';
 
 class NotificationService {
   final ApiService _apiService;
+  final Logger _logger = Logger();
 
   NotificationService(this._apiService);
 
@@ -17,7 +19,7 @@ class NotificationService {
       return [...alerts, ...registrations, ...appointments]
         ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
     } catch (e) {
-      print('Error fetching notifications: $e');
+      _logger.e('Error fetching notifications: $e');
       return [];
     }
   }
@@ -92,7 +94,7 @@ class NotificationService {
       }
       return DateTime.now();
     } catch (e) {
-      print('Error parsing date: $e');
+      _logger.e('Error parsing date: $e');
       return DateTime.now();
     }
   }
