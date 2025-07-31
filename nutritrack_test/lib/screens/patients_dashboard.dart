@@ -5,7 +5,6 @@ import '../models/patient.dart';
 import '../widgets/patient_card.dart';
 import '../services/api_service.dart';
 import 'patient_overview_screen.dart';
-import '../widgets/options_menu_sheet.dart';
 
 class PatientsDashboard extends StatefulWidget {
   const PatientsDashboard({super.key});
@@ -65,56 +64,40 @@ class _PatientsDashboardState extends State<PatientsDashboard> {
     });
   }
 
-  void _showOptionsMenu(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (_) => const OptionsMenuSheet(),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        leading: Container(
-          margin: const EdgeInsets.all(8),
-          decoration: BoxDecoration(
-            color: Colors.green.shade100,
-            shape: BoxShape.circle,
-          ),
-          child: const Icon(Icons.person_outline, color: Colors.green),
-        ),
-        title: const Text(
-          'Patients Dashboard',
-          style: TextStyle(
-            color: Colors.black87,
-            fontSize: 18,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-        centerTitle: false,
-      ),
-      body: Column(
+    return Container(
+      // Changed from Scaffold
+      color: Colors.white,
+      child: Column(
         children: [
+          AppBar(
+            backgroundColor: Colors.white,
+            elevation: 0,
+            leading: Container(
+              margin: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: Colors.green.shade100,
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(Icons.person_outline, color: Colors.green),
+            ),
+            title: const Text(
+              'Patients Dashboard',
+              style: TextStyle(
+                color: Colors.black87,
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            centerTitle: false,
+          ),
           _buildSearchBar(),
           _buildSortBar(),
           const SizedBox(height: 16),
           _buildPatientGrid(),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.green.shade700,
-        elevation: 4,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        onPressed: () => _showOptionsMenu(context),
-        child: const Icon(Icons.add, color: Colors.white, size: 28),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 

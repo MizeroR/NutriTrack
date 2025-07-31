@@ -10,6 +10,7 @@ require("dotenv").config();
 
 const app = express();
 const PORT = 3000;
+app.use(express.json());
 
 app.use(cors());
 // Add to your Node.js app
@@ -58,11 +59,9 @@ const client = twilio(accountSid, authToken);
 
 // ✅ Register a patient and send onboarding SMS
 app.post("/send-sms", async (req, res) => {
-  console.log('Received patient data:', req.body); // Debug log
-  const { name, phone, age, language, trimester, assignedTo } = req.body;
+  const { name, phone, language, trimester, assignedTo } = req.body;
 
-  if (!name || !phone || !age || !language || !trimester) {
-    console.log('Missing fields - name:', name, 'phone:', phone, 'age:', age, 'language:', language, 'trimester:', trimester);
+  if (!name || !phone || !language || !trimester) {
     return res.status(400).send("Missing required fields");
   }
 
@@ -93,17 +92,14 @@ app.post("/send-sms", async (req, res) => {
       timestamp: admin.firestore.FieldValue.serverTimestamp(),
     });
 
-    const patientData = {
+    await db.collection("patients").add({
       name,
       phone: phone.trim(),
-      age,
       language,
       trimester,
       assignedTo: assignedTo || "unassigned",
       createdAt: admin.firestore.FieldValue.serverTimestamp(),
-    };
-    console.log('Saving patient to database:', patientData); // Debug log
-    await db.collection("patients").add(patientData);
+    });
 
     console.log(`✅ SMS sent to ${phone} (SID: ${sms.sid})`);
     res.status(200).send("SMS sent and logged.");
@@ -193,6 +189,35 @@ app.post(
     res.send(`<Response></Response>`);
   }
 );
+
+// ✅ Fetch notifications for healthcare workers
+app.get("/notifications", authenticate, async (req, res) => {
+  const { healthcareWorkerId } = req.query;
+
+  if (!healthcareWorkerId) {
+    return res.status(400).json({ error: "Missing healthcareWorkerId" });
+  }
+
+  try {
+    const snapshot = await db
+      .collection("notifications")
+      .where("healthcareWorkerId", "==", healthcareWorkerId)
+      .orderBy("createdAt", "desc")
+      .limit(50)
+      .get();
+
+    const notifications = snapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+      createdAt: doc.data().createdAt.toDate().toISOString(),
+    }));
+
+    res.status(200).json(notifications);
+  } catch (err) {
+    console.error("❌ Error fetching notifications:", err.message);
+    res.status(500).json({ error: "Failed to fetch notifications" });
+  }
+});
 
 app.post("/send-alert", async (req, res) => {
   const { patientId } = req.body;
@@ -323,6 +348,118 @@ app.get("/sms-logs", async (req, res) => {
   } catch (err) {
     console.error("❌ Error fetching SMS logs:", err.message);
     res.status(500).json({ error: "Failed to fetch SMS logs" });
+  }
+});
+
+// ✅ Register a new appointment
+app.post("/register-appointment", authenticate, async (req, res) => {
+  console.log("Received appointment data:", req.body);
+  const {
+    patientName = "",
+    patientId = "",
+    appointmentDateTime = "",
+    doctorName = "",
+    condition = "",
+    assignedTo = "",
+  } = req.body;
+
+  if (
+    !patientName ||
+    !patientId ||
+    !appointmentDateTime ||
+    !doctorName ||
+    !condition ||
+    !assignedTo
+  ) {
+    console.log("Missing fields:", {
+      patientName: !!patientName,
+      patientId: !!patientId,
+      appointmentDateTime: !!appointmentDateTime,
+      doctorName: !!doctorName,
+      condition: !!condition,
+      assignedTo: !!assignedTo,
+    });
+    return res.status(400).json({ error: "Missing required fields" });
+  }
+
+  try {
+    // Create the appointment document
+    const appointmentRef = await db.collection("appointments").add({
+      patientName,
+      patientId,
+      appointmentDateTime: new Date(appointmentDateTime),
+      doctorName,
+      condition,
+      assignedTo,
+      status: "scheduled", // can be: scheduled, completed, cancelled
+      createdAt: admin.firestore.FieldValue.serverTimestamp(),
+      updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+    });
+
+    if (patientId) {
+      await db.collection("notifications").add({
+        type: "appointment",
+        title: "New Appointment Scheduled",
+        message: `Appointment with ${doctorName} for ${patientName}`,
+        healthcareWorkerId: assignedTo,
+        patientId: patientId,
+        appointmentId: appointmentRef.id,
+        isRead: false,
+        createdAt: admin.firestore.FieldValue.serverTimestamp(),
+      });
+    }
+
+    // Optionally link to patient if we find a matching patient
+    const patientQuery = await db
+      .collection("patients")
+      .where("name", "==", patientName)
+      .limit(1)
+      .get();
+
+    if (!patientQuery.empty) {
+      const patientId = patientQuery.docs[0].id;
+      await db.collection("appointments").doc(appointmentRef.id).update({
+        patientId: patientId,
+      });
+    }
+
+    res.status(201).json({
+      id: appointmentRef.id,
+      message: "Appointment created successfully",
+    });
+  } catch (err) {
+    console.error("❌ Error creating appointment:", err.message);
+    res.status(500).json({ error: "Failed to create appointment" });
+  }
+});
+
+// ✅ Get appointments for a healthcare worker
+app.get("/appointments", authenticate, async (req, res) => {
+  const { healthcareWorkerId } = req.query;
+
+  if (!healthcareWorkerId) {
+    return res.status(400).json({ error: "Missing healthcareWorkerId" });
+  }
+
+  try {
+    const snapshot = await db
+      .collection("appointments")
+      .where("assignedTo", "==", healthcareWorkerId)
+      .orderBy("appointmentDateTime")
+      .get();
+
+    const appointments = snapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+      appointmentDateTime: doc.data().appointmentDateTime.toISOString(),
+      createdAt: doc.data().createdAt.toDate().toISOString(),
+      updatedAt: doc.data().updatedAt.toDate().toISOString(),
+    }));
+
+    res.status(200).json(appointments);
+  } catch (err) {
+    console.error("❌ Error fetching appointments:", err.message);
+    res.status(500).json({ error: "Failed to fetch appointments" });
   }
 });
 

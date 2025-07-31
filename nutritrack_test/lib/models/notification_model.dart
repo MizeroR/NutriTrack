@@ -1,14 +1,11 @@
 // notification_model.dart
-enum NotificationType {
-  alert,
-  patientRegistration,
-  system,
-}
+enum NotificationType { alert, patientRegistration, system, appointment }
 
 class NotificationModel {
   final String id;
   final String title;
   final String message;
+  final String? appointmentId;
   final DateTime createdAt;
   final NotificationType type;
   bool isRead;
@@ -22,6 +19,7 @@ class NotificationModel {
     required this.createdAt,
     required this.type,
     this.isRead = false,
+    this.appointmentId,
     this.patientId,
     this.metadata,
   });
@@ -35,6 +33,8 @@ class NotificationModel {
         return 'person_add';
       case NotificationType.system:
         return 'info';
+      case NotificationType.appointment:
+        return 'event';
     }
   }
 }

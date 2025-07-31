@@ -82,6 +82,15 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
           ),
         );
         break;
+
+      case NotificationType.appointment:
+        // Navigate to appointments screen or show appointment details
+        Navigator.pushNamed(
+          context,
+          '/appointment-details',
+          arguments: {'appointmentId': notification.appointmentId},
+        );
+        break;
     }
   }
 

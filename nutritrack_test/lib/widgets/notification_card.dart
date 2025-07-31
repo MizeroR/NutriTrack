@@ -37,6 +37,8 @@ class NotificationCard extends StatelessWidget {
         return const Color(0xFFF44336); // Red for alerts
       case 'person_add':
         return const Color(0xFF4CAF50); // Green for registrations
+      case 'calendar':
+        return const Color(0xFFFF9800); // Orange for appointments
       default:
         return const Color(0xFF2196F3); // Blue for others
     }
@@ -69,7 +71,9 @@ class NotificationCard extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: _getIconColor(notification.iconType).withValues(alpha: 0.2),
+                color: _getIconColor(
+                  notification.iconType,
+                ).withValues(alpha: 0.2),
                 shape: BoxShape.circle,
               ),
               child: Icon(
