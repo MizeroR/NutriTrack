@@ -32,13 +32,42 @@ class Patient {
     return Patient(
       id: id,
       name: data['name'] ?? 'Unknown',
-      age: (data['age'] is int) ? data['age'] : (int.tryParse(data['age'].toString()) ?? 0),
+      age: (data['age'] is int)
+          ? data['age']
+          : (int.tryParse(data['age'].toString()) ?? 0),
       visits: data['visits'],
       phone: data['phone'] ?? '',
       duration: data['duration'],
       language: data['language'] ?? 'english',
-      trimester: (data['trimester'] is int) ? data['trimester'] : (int.tryParse(data['trimester'].toString()) ?? 1),
-      createdAt: data['createdAt'] != null ? DateTime.parse(data['createdAt']) : DateTime.now(),
+      trimester: (data['trimester'] is int)
+          ? data['trimester']
+          : (int.tryParse(data['trimester'].toString()) ?? 1),
+      createdAt: data['createdAt'] != null
+          ? DateTime.parse(data['createdAt'])
+          : DateTime.now(),
+    );
+  }
+
+  Patient copyWith({
+    String? name,
+    int? age,
+    String? phone,
+    String? language,
+    int? trimester,
+    DateTime? createdAt,
+    Color? statusColor,
+    bool? hasNewMessage,
+  }) {
+    return Patient(
+      id: id,
+      name: name ?? this.name,
+      age: age ?? this.age,
+      phone: phone ?? this.phone,
+      language: language ?? this.language,
+      trimester: trimester ?? this.trimester,
+      createdAt: createdAt ?? this.createdAt,
+      statusColor: statusColor ?? this.statusColor,
+      hasNewMessage: hasNewMessage ?? this.hasNewMessage,
     );
   }
 }

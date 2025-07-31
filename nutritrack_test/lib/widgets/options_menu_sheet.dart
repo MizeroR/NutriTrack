@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'add_patient_form_sheet.dart';
+import 'manage_patient_details_sheet.dart';
 
 class OptionsMenuSheet extends StatelessWidget {
   const OptionsMenuSheet({super.key});
@@ -28,9 +29,20 @@ class OptionsMenuSheet extends StatelessWidget {
           _buildOptionTile(
             icon: Icons.manage_accounts_outlined,
             label: 'Manage Patient Details',
-            onTap: () {},
+            onTap: () {
+              Navigator.pop(context);
+              Future.delayed(const Duration(milliseconds: 200), () {
+                if (context.mounted) {
+                  showModalBottomSheet(
+                    context: context,
+                    isScrollControlled: true,
+                    backgroundColor: Colors.transparent,
+                    builder: (context) => const ManagePatientDetailsSheet(),
+                  );
+                }
+              });
+            },
           ),
-          const SizedBox(height: 16),
 
           _buildOptionTile(
             icon: Icons.chat_bubble_outline,
@@ -122,7 +134,7 @@ class OptionsMenuSheet extends StatelessWidget {
 
   void _openAddPatientForm(BuildContext context) {
     Navigator.pop(context);
-    
+
     Future.delayed(const Duration(milliseconds: 200), () {
       if (context.mounted) {
         showDialog(

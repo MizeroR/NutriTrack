@@ -109,6 +109,46 @@ app.post("/send-sms", async (req, res) => {
   }
 });
 
+app.put("/patients/:id", authenticate, async (req, res) => {
+  const { id } = req.params;
+  const { name, age, phone, trimester } = req.body;
+
+  if (!name || !age || !phone || !trimester) {
+    return res.status(400).json({ error: "Missing required fields" });
+  }
+
+  try {
+    await db
+      .collection("patients")
+      .doc(id)
+      .update({
+        name,
+        age: parseInt(age),
+        phone,
+        trimester: parseInt(trimester),
+        updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+      });
+
+    res.status(200).json({ message: "Patient updated successfully" });
+  } catch (err) {
+    console.error("❌ Error updating patient:", err.message);
+    res.status(500).json({ error: "Failed to update patient" });
+  }
+});
+
+// ✅ Delete a patient
+app.delete("/patients/:id", authenticate, async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    await db.collection("patients").doc(id).delete();
+    res.status(200).json({ message: "Patient deleted successfully" });
+  } catch (err) {
+    console.error("❌ Error deleting patient:", err.message);
+    res.status(500).json({ error: "Failed to delete patient" });
+  }
+});
+
 // ✅ Get patients assigned to health worker
 app.get("/patients", async (req, res) => {
   const assignedTo = req.query.assignedTo;

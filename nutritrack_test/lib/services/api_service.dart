@@ -2,10 +2,11 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../models/nutrition_summary.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import '../models/patient.dart';
 
 class ApiService {
-  // static const String _baseUrl = 'http://localhost:3000';
-  static const String _baseUrl = 'https://3b027c08e174.ngrok-free.app';
+  static const String _baseUrl = 'http://localhost:3000';
+  // static const String _baseUrl = 'https://3b027c08e174.ngrok-free.app';
 
   final String? healthcareWorkerId;
 
@@ -88,6 +89,36 @@ class ApiService {
     } catch (e) {
       print('Registration error: $e');
       rethrow;
+    }
+  }
+
+  Future<void> updatePatient(Patient patient) async {
+    final headers = await _getHeaders();
+    final response = await http.put(
+      Uri.parse('$_baseUrl/patients/${patient.id}'),
+      headers: headers,
+      body: jsonEncode({
+        'name': patient.name,
+        'age': patient.age,
+        'phone': patient.phone,
+        'trimester': patient.trimester,
+      }),
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception('Failed to update patient: ${response.body}');
+    }
+  }
+
+  Future<void> deletePatient(String patientId) async {
+    final headers = await _getHeaders();
+    final response = await http.delete(
+      Uri.parse('$_baseUrl/patients/$patientId'),
+      headers: headers,
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception('Failed to delete patient: ${response.body}');
     }
   }
 

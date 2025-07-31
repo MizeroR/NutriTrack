@@ -64,6 +64,12 @@ class _PatientsDashboardState extends State<PatientsDashboard> {
     });
   }
 
+  Future<void> _reloadPatients() async {
+    setState(() {
+      _patientsFuture = _fetchPatients();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -87,6 +93,12 @@ class _PatientsDashboardState extends State<PatientsDashboard> {
               ),
             ),
             centerTitle: false,
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.refresh, color: Colors.green),
+                onPressed: _reloadPatients,
+              ),
+            ],
           ),
           _buildSearchBar(),
           _buildSortBar(),
