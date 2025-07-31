@@ -59,45 +59,92 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void _showForgotPasswordDialog() {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Reset Password'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Text('Enter your email to receive a password reset link:'),
-            const SizedBox(height: 16),
-            TextField(
-              decoration: const InputDecoration(
-                hintText: 'Email address',
-                border: OutlineInputBorder(),
-              ),
-              onSubmitted: (email) async {
-                try {
-                  await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
-                  Navigator.pop(context);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Password reset email sent!')),
-                  );
-                } catch (e) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Error: ${e.toString()}')),
-                  );
-                }
-              },
+  final TextEditingController emailController = TextEditingController();
+  
+  showDialog(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: const Text('Reset Password'),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const Text('Enter your email to receive a password reset link:'),
+          const SizedBox(height: 16),
+          TextField(
+            controller: emailController,
+            keyboardType: TextInputType.emailAddress,
+            decoration: const InputDecoration(
+              hintText: 'Email address',
+              border: OutlineInputBorder(),
+              prefixIcon: Icon(Icons.email),
             ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
           ),
         ],
       ),
-    );
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: const Text('Cancel'),
+        ),
+        ElevatedButton(
+          onPressed: () async {
+            final email = emailController.text.trim();
+            
+            // Validate email
+            if (email.isEmpty) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Please enter your email')),
+              );
+              return;
+            }
+            
+            if (!email.contains('@') || !email.contains('.')) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Please enter a valid email')),
+              );
+              return;
+            }
+            
+            try {
+              // Show loading
+              Navigator.pop(context); // Close dialog first
+              
+              await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+              
+              // Show success message
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Password reset email sent! Check your inbox.'),
+                  backgroundColor: Colors.green,
+                ),
+              );
+            } catch (e) {
+              // Show error message
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('Error: ${_getFirebaseErrorMessage(e.toString())}'),
+                  backgroundColor: Colors.red,
+                ),
+              );
+            }
+          },
+          child: const Text('Send Reset Email'),
+        ),
+      ],
+    ),
+  );
+}
+String _getFirebaseErrorMessage(String error) {
+  if (error.contains('user-not-found')) {
+    return 'No account found with this email address';
+  } else if (error.contains('invalid-email')) {
+    return 'Invalid email address';
+  } else if (error.contains('too-many-requests')) {
+    return 'Too many requests. Please try again later';
+  } else {
+    return 'Failed to send reset email. Please try again';
   }
+}
 
   @override
   Widget build(BuildContext context) {

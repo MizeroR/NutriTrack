@@ -23,7 +23,7 @@ class HomeScreen extends StatelessWidget {
           HomeCard(
             assetPath: 'assets/images/icons/reports.png',
             title: 'Reports & Analytics',
-            subtitle: 'Report To Doctor and schedule appointment',
+            subtitle: 'Report and schedule appointment',
             buttonLabel: 'Doctor logs',
             onTap: () => Navigator.pushNamed(context, '/reports_analytics'),
           ),

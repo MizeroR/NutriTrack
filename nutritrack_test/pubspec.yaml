@@ -32,23 +32,30 @@ dependencies:
     sdk: flutter
   provider: ^6.1.5
   firebase_core: ^4.0.0
+<<<<<<< HEAD
   firebase_core_dart:
   firebase_auth: ^6.0.0
   google_sign_in: ^7.1.1
+=======
+>>>>>>> b3cffdf5db6fecf56c687c8348bf0a920503a114
   shared_preferences: ^2.0.13
   firebase_database: ^12.0.0
   intl: ^0.20.2
   http: ^1.4.0
   logger: ^2.0.2+1
   fl_chart: ^1.0.0
+<<<<<<< HEAD
   pdf: ^3.10.0 # For PDF generation
   path_provider: ^2.1.1 # For local storage access
   open_file: ^3.3.1 # To open the downloaded file
   permission_handler: ^10.4.0 # For storage permissions (Android/iOS)
+=======
+  firebase_auth: ^6.0.0
+>>>>>>> b3cffdf5db6fecf56c687c8348bf0a920503a114
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^1.0.8
+cupertino_icons: ^1.0.8
 
 dev_dependencies:
   flutter_test:
