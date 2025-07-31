@@ -15,8 +15,7 @@ class MainScreen extends StatelessWidget {
       child: Consumer<NavState>(
         builder: (context, navState, _) {
           final screens = [
-            const HomeScreen(),
-            Placeholder(), // This should be your patients screen
+            const HomeScreen(), // This should be your patients screen
             const NotificationsScreen(),
             const SettingsScreen(),
           ];

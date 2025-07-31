@@ -5,7 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../models/patient.dart';
 
 class ApiService {
-  static const String _baseUrl = 'http://localhost:3000';
+  static const String _baseUrl = 'https://nutritrack-ln4l.onrender.com';
   // static const String _baseUrl = 'https://3b027c08e174.ngrok-free.app';
 
   final String? healthcareWorkerId;

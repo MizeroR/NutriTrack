@@ -52,21 +52,21 @@ class CustomBottomNavBar extends StatelessWidget {
               icon: Icons.home_outlined,
               isActive: selectedIndex == 0,
             ),
+            // _NavIcon(
+            //   index: 1,
+            //   icon: Icons.people_outline,
+            //   isActive: selectedIndex == 1,
+            // ),
+            // const SizedBox(width: 48), // Space for FAB
             _NavIcon(
               index: 1,
-              icon: Icons.people_outline,
+              icon: Icons.notifications_outlined,
               isActive: selectedIndex == 1,
             ),
-            const SizedBox(width: 48), // Space for FAB
             _NavIcon(
               index: 2,
-              icon: Icons.notifications_outlined,
-              isActive: selectedIndex == 2,
-            ),
-            _NavIcon(
-              index: 3,
               icon: Icons.person_outline,
-              isActive: selectedIndex == 3,
+              isActive: selectedIndex == 2,
             ),
           ],
         ),
