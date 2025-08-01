@@ -7,18 +7,18 @@
 [![Node.js](https://img.shields.io/badge/Node.js-16.0+-green.svg)](https://nodejs.org/)
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-## 📋 Overview
+## Overview
 
 NutriTrack MAMA is a comprehensive mobile application designed to support maternal nutrition monitoring in healthcare settings. The system enables healthcare workers to register pregnant women, track their nutritional intake via SMS, and receive automated alerts for nutritional deficiencies.
 
-### 🎯 Key Features
+### Key Features
 
-- **👩‍⚕️ Healthcare Worker Authentication** - Secure login with Firebase Auth + Google Sign-In
-- **👶 Patient Management** - Complete CRUD operations for pregnant women
-- **📱 SMS Integration** - Food logging via simple SMS messages (Twilio)
-- **🔔 Smart Alerts** - Automated nutrition deficiency detection
-- **📊 Analytics Dashboard** - Visual nutrition trends and reports
-- **🌍 Multi-language Support** - English, Swahili, Kinyarwanda
+- **Healthcare Worker Authentication** - Secure login with Firebase Auth + Google Sign-In
+- **Patient Management** - Complete CRUD operations for pregnant women
+- **SMS Integration** - Food logging via simple SMS messages (Twilio)
+- **Smart Alerts** - Automated nutrition deficiency detection
+- **Analytics Dashboard** - Visual nutrition trends and reports
+- **Multi-language Support** - English, Swahili, Kinyarwanda
 
 ## 🏗️ Architecture
 
@@ -42,7 +42,7 @@ NutriTrack MAMA is a comprehensive mobile application designed to support matern
                        └─────────────────┘
 ```
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Prerequisites
 
@@ -56,8 +56,8 @@ NutriTrack MAMA is a comprehensive mobile application designed to support matern
 
 1. **Clone the repository**
 ```bash
-git clone https://github.com/your-username/nutritrack.git
-cd nutritrack/nutritrack_test
+git clone https://github.com/MizeroR/NutriTrack
+cd NutriTrack/nutritrack_test
 ```
 
 2. **Install dependencies**
@@ -76,7 +76,6 @@ firebase init
 
 # Add configuration files:
 # - android/app/google-services.json
-# - ios/Runner/GoogleService-Info.plist
 ```
 
 4. **Run the application**
@@ -119,10 +118,10 @@ node index.js
 ```
 
 6. **Configure Twilio webhook**
-- Set webhook URL: `https://your-domain.com/incoming-sms`
+- Set webhook URL: `https://nutritrack-ln4l.onrender.com/incoming-sms`
 - HTTP Method: POST
 
-## 📊 Database Schema
+## Database Schema
 
 ### Firebase Firestore Collections
 
@@ -172,7 +171,7 @@ alerts_sent/{alertId}
 └── triggeredAt: timestamp
 ```
 
-## 🔐 Security
+## Security
 
 ### Firebase Security Rules
 
@@ -199,7 +198,7 @@ service cloud.firestore {
 }
 ```
 
-## 🧪 Testing
+## Testing
 
 ### Run Tests
 
@@ -221,7 +220,7 @@ flutter test test/auth_test.dart
 - **Integration Tests**: End-to-end user workflows
 - **Coverage**: 85%+ code coverage maintained
 
-## 📱 API Documentation
+## API Documentation
 
 ### Authentication Endpoints
 
@@ -287,7 +286,7 @@ POST /send-alert
 }
 ```
 
-## 📊 Usage Examples
+## Usage Examples
 
 ### Patient Registration Flow
 
@@ -349,7 +348,7 @@ flutter analyze
 dart fix --dry-run
 ```
 
-## 🌍 Localization
+## Localization
 
 ### Supported Languages
 
@@ -363,7 +362,7 @@ dart fix --dry-run
 2. Update SMS message templates in `index.js`
 3. Add translation strings for UI elements
 
-## 🚀 Deployment
+## Deployment
 
 ### Production Deployment
 
@@ -386,7 +385,7 @@ firebase deploy --only functions
 - Set production Twilio webhook URLs
 - Configure environment variables
 
-## 📈 Performance
+## Performance
 
 ### Optimization Features
 
@@ -403,7 +402,7 @@ firebase deploy --only functions
 - **Performance Monitoring**: API response times
 - **Custom Logging**: Structured logging for debugging
 
-## 🤝 Contributing
+## Contributing
 
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/amazing-feature`)
@@ -418,19 +417,12 @@ firebase deploy --only functions
 - Update documentation
 - Ensure code passes all quality checks
 
-## 📝 License
+## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 👥 Team
 
-- **Technical Lead**: Project architecture, authentication system
-- **Frontend Developer**: UI/UX design, Flutter widgets
-- **Backend Developer**: Node.js API, SMS integration
-- **QA Engineer**: Testing, quality assurance
-- **Data Analyst**: Analytics, nutrition algorithms
-
-## 🆘 Support
+## Support
 
 ### Common Issues
 
@@ -443,27 +435,6 @@ A: Verify `google-services.json` and `GoogleService-Info.plist` are properly con
 **Q: App crashing on startup?**
 A: Ensure all dependencies are installed with `flutter pub get`.
 
-### Getting Help
-
-- 📧 Email: support@nutritrack-mama.com
-- 🐛 Issues: [GitHub Issues](https://github.com/your-username/nutritrack/issues)
-- 📖 Documentation: [Wiki](https://github.com/your-username/nutritrack/wiki)
-
-## 🎯 Roadmap
-
-### Version 2.0 (Planned)
-- [ ] AI-powered food recognition from images
-- [ ] Voice-to-text food logging
-- [ ] Integration with wearable devices
-- [ ] Advanced predictive analytics
-- [ ] Multi-facility support
-- [ ] EHR system integration
-
-### Version 1.1 (Next Release)
-- [ ] Push notifications
-- [ ] Offline mode improvements
-- [ ] Additional language support
-- [ ] Enhanced analytics dashboard
 
 ---
 
