@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../state/auth_state.dart';
 import '../services/api_service.dart';
+import 'package:logger/logger.dart';
 
 class AddAppointmentFormDialog extends StatefulWidget {
   const AddAppointmentFormDialog({super.key});
@@ -18,6 +19,7 @@ class _AddAppointmentFormDialogState extends State<AddAppointmentFormDialog> {
   DateTime? _selectedDateTime;
   List<dynamic> _patientOptions = [];
   bool _isLoadingPatients = true;
+  final Logger _logger = Logger();
 
   // List of doctors (example)
   final List<String> _doctorOptions = [
@@ -34,18 +36,22 @@ class _AddAppointmentFormDialogState extends State<AddAppointmentFormDialog> {
 
   Future<void> _loadPatients() async {
     final apiService = Provider.of<ApiService>(context, listen: false);
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
+
     try {
       final patients = await apiService.getAssignedPatients();
-      setState(() {
-        _patientOptions = patients;
-        _isLoadingPatients = false;
-      });
-    } catch (e) {
-      setState(() {
-        _isLoadingPatients = false;
-      });
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
+        setState(() {
+          _patientOptions = patients;
+          _isLoadingPatients = false;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _isLoadingPatients = false;
+        });
+        scaffoldMessenger.showSnackBar(
           SnackBar(content: Text('Failed to load patients: ${e.toString()}')),
         );
       }
@@ -124,6 +130,7 @@ class _AddAppointmentFormDialogState extends State<AddAppointmentFormDialog> {
                     );
                     if (pickedDate != null) {
                       final pickedTime = await showTimePicker(
+                        // ignore: use_build_context_synchronously
                         context: context,
                         initialTime: TimeOfDay.now(),
                       );
@@ -251,13 +258,16 @@ class _AddAppointmentFormDialogState extends State<AddAppointmentFormDialog> {
   }
 
   Future<void> _submitForm() async {
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
+    final navigator = Navigator.of(context);
+
     if (_selectedPatient == null ||
         _appointmentDateController.text.isEmpty ||
         _selectedDoctor == null ||
         _conditionController.text.isEmpty) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('Please fill all fields')));
+      scaffoldMessenger.showSnackBar(
+        const SnackBar(content: Text('Please fill all fields')),
+      );
       return;
     }
 
@@ -280,22 +290,19 @@ class _AddAppointmentFormDialogState extends State<AddAppointmentFormDialog> {
         'assignedTo': authState.currentUserData?['healthcareId'],
       };
 
-      print('Submitting appointment data: $appointmentData'); // Debug log
+      _logger.d('Submitting appointment data: $appointmentData');
 
       await apiService.registerAppointment(appointmentData);
-      if (mounted) {
-        Navigator.pop(context); // Close the dialog
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Appointment registered successfully')),
-        );
-      }
+
+      navigator.pop(); // Close the dialog
+      scaffoldMessenger.showSnackBar(
+        const SnackBar(content: Text('Appointment registered successfully')),
+      );
     } catch (e) {
-      print('Error creating appointment: $e'); // More detailed error logging
-      if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Error: ${e.toString()}')));
-      }
+      _logger.e('Error creating appointment: $e');
+      scaffoldMessenger.showSnackBar(
+        SnackBar(content: Text('Error: ${e.toString()}')),
+      );
     }
   }
 

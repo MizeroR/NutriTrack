@@ -3,12 +3,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
+import 'package:logger/logger.dart';
 
 class AuthState extends ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final DatabaseReference _dbRef = FirebaseDatabase.instance.ref(
     'healthcare_workers',
   );
+  final Logger _logger = Logger();
 
   bool _isLoading = false;
   String? _errorMessage;
@@ -36,8 +38,8 @@ class AuthState extends ChangeNotifier {
   }
 
   void printCurrentUser() {
-    print('Current User: ${user?.uid}');
-    print('Healthcare ID: ${currentUserData?['healthcareId']}');
+    _logger.d('Current User: ${user?.uid}');
+    _logger.d('Healthcare ID: ${currentUserData?['healthcareId']}');
   }
 
   Future<void> register(
@@ -168,9 +170,9 @@ class AuthState extends ChangeNotifier {
   }
 
   void _setLoading(bool value) {
-    print('AuthState loading: $value');
-    print('Current user: ${_auth.currentUser?.uid}');
-    print('Healthcare ID: ${_currentUserData?['healthcareId']}');
+    _logger.d('AuthState loading: $value');
+    _logger.d('Current user: ${_auth.currentUser?.uid}');
+    _logger.d('Healthcare ID: ${_currentUserData?['healthcareId']}');
     _isLoading = value;
     notifyListeners();
   }

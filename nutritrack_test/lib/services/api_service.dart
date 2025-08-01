@@ -3,12 +3,14 @@ import 'package:http/http.dart' as http;
 import '../models/nutrition_summary.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../models/patient.dart';
+import 'package:logger/logger.dart';
 
 class ApiService {
   static const String _baseUrl = 'https://nutritrack-ln4l.onrender.com';
   // static const String _baseUrl = 'https://3b027c08e174.ngrok-free.app';
 
   final String? healthcareWorkerId;
+  final Logger _logger = Logger();
 
   ApiService({this.healthcareWorkerId});
 
@@ -20,7 +22,7 @@ class ApiService {
 
     // Get the Firebase Auth token
     final token = await user.getIdToken();
-    print('Current Firebase Token: $token');
+    _logger.d('Current Firebase Token: $token');
     return {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
@@ -41,7 +43,7 @@ class ApiService {
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
-      print('Patients API Response: $data'); // Debug log
+      _logger.d('Patients API Response: $data');
       return data;
     } else {
       throw Exception('Failed to load patients');
@@ -87,7 +89,7 @@ class ApiService {
         throw Exception('Failed to register patient: ${response.body}');
       }
     } catch (e) {
-      print('Registration error: $e');
+      _logger.e('Registration error: $e');
       rethrow;
     }
   }
@@ -143,13 +145,13 @@ class ApiService {
   Future<List<dynamic>> getHealthcareWorkerAlerts({int days = 7}) async {
     final currentHcwId = healthcareWorkerId;
     if (currentHcwId == null || currentHcwId.isEmpty) {
-      print('No healthcareWorkerId available - returning empty list');
+      _logger.w('No healthcareWorkerId available - returning empty list');
       return [];
     }
     try {
       final currentHcwId = healthcareWorkerId;
       if (currentHcwId == null) {
-        print('Healthcare Worker ID not available - checking auth state');
+        _logger.w('Healthcare Worker ID not available - checking auth state');
         await FirebaseAuth.instance.authStateChanges().first;
         throw Exception('No healthcare worker ID after auth check');
       }
@@ -160,7 +162,7 @@ class ApiService {
       );
 
       final response = await http.get(uri, headers: headers);
-      print('Alerts API Response: ${response.statusCode} - ${response.body}');
+      _logger.d('Alerts API Response: ${response.statusCode} - ${response.body}');
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
@@ -170,17 +172,17 @@ class ApiService {
         throw Exception('API Error: ${response.statusCode} - ${response.body}');
       }
     } on FirebaseAuthException catch (e) {
-      print('Firebase Auth Error: ${e.message}');
+      _logger.e('Firebase Auth Error: ${e.message}');
       rethrow;
     } catch (e) {
-      print('Error fetching alerts: $e');
+      _logger.e('Error fetching alerts: $e');
       rethrow;
     }
   }
 
   Future<void> registerAppointment(Map<String, dynamic> appointmentData) async {
     final headers = await _getHeaders();
-    print('Sending appointment data: $appointmentData');
+    _logger.d('Sending appointment data: $appointmentData');
     final response = await http.post(
       Uri.parse('$_baseUrl/register-appointment'),
       headers: {
@@ -191,7 +193,7 @@ class ApiService {
     );
 
     if (response.statusCode != 201) {
-      print('Appointment creation failed: ${response.body}');
+      _logger.e('Appointment creation failed: ${response.body}');
       throw Exception('Failed to register appointment: ${response.body}');
     }
   }

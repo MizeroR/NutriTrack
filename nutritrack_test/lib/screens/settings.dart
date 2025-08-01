@@ -101,17 +101,19 @@ class SettingsScreen extends StatelessWidget {
                             trailing: Switch(
                               value: isDarkMode,
                               onChanged: (value) async {
+                                final navigator = Navigator.of(context);
+                                final scaffoldMessenger = ScaffoldMessenger.of(context);
+                                
                                 await settings.setDarkMode(value);
-                                if (context.mounted) {
-                                  Navigator.of(context).pushAndRemoveUntil(
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          const SplashScreen(),
-                                    ),
-                                    (route) => false,
-                                  );
-                                }
-                                ScaffoldMessenger.of(context).showSnackBar(
+                                
+                                navigator.pushAndRemoveUntil(
+                                  MaterialPageRoute(
+                                    builder: (context) => const SplashScreen(),
+                                  ),
+                                  (route) => false,
+                                );
+                                
+                                scaffoldMessenger.showSnackBar(
                                   SnackBar(
                                     content: Text(
                                       'Dark mode ${value ? 'enabled' : 'disabled'}',

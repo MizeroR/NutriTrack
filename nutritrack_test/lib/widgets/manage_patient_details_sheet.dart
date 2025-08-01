@@ -131,6 +131,9 @@ class _ManagePatientDetailsSheetState extends State<ManagePatientDetailsSheet> {
           ),
           TextButton(
             onPressed: () async {
+              final navigator = Navigator.of(context);
+              final scaffoldMessenger = ScaffoldMessenger.of(context);
+              
               final updatedPatient = Patient(
                 id: patient.id,
                 name: nameController.text,
@@ -156,22 +159,18 @@ class _ManagePatientDetailsSheetState extends State<ManagePatientDetailsSheet> {
                   }
                 });
 
-                if (mounted) {
-                  Navigator.pop(context);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Patient updated successfully'),
-                    ),
-                  );
-                }
+                navigator.pop();
+                scaffoldMessenger.showSnackBar(
+                  const SnackBar(
+                    content: Text('Patient updated successfully'),
+                  ),
+                );
               } catch (e) {
-                if (mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('Error updating patient: ${e.toString()}'),
-                    ),
-                  );
-                }
+                scaffoldMessenger.showSnackBar(
+                  SnackBar(
+                    content: Text('Error updating patient: ${e.toString()}'),
+                  ),
+                );
               }
             },
             child: const Text('Save', style: TextStyle(color: Colors.green)),
@@ -296,7 +295,7 @@ class _ManagePatientDetailsSheetState extends State<ManagePatientDetailsSheet> {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
+            color: Colors.grey.withValues(alpha: 0.1),
             blurRadius: 6,
             offset: const Offset(0, 3),
           ),

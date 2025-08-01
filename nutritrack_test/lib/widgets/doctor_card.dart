@@ -25,7 +25,7 @@ class DoctorCard extends StatelessWidget {
         border: Border.all(color: Colors.grey[300]!, width: 1.5),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.04),
+            color: Colors.grey.withValues(alpha: 0.04),
             blurRadius: 2,
             offset: const Offset(0, 1),
           ),
@@ -38,7 +38,7 @@ class DoctorCard extends StatelessWidget {
             width: 56,
             height: 56,
             decoration: BoxDecoration(
-              color: profileColor.withOpacity(0.2),
+              color: profileColor.withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(14),
               border: Border.all(color: profileColor, width: 2),
             ),

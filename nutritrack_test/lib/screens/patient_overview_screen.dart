@@ -13,10 +13,10 @@ class PatientOverviewScreen extends StatefulWidget {
   const PatientOverviewScreen({super.key, required this.patient});
 
   @override
-  _PatientOverviewScreenState createState() => _PatientOverviewScreenState();
+  PatientOverviewScreenState createState() => PatientOverviewScreenState();
 }
 
-class _PatientOverviewScreenState extends State<PatientOverviewScreen> {
+class PatientOverviewScreenState extends State<PatientOverviewScreen> {
   late Future<NutritionSummary> _nutritionSummary;
   final Color primaryGreen = const Color(0xFF91C788);
 
@@ -39,7 +39,7 @@ class _PatientOverviewScreenState extends State<PatientOverviewScreen> {
         borderRadius: BorderRadius.circular(8),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
+            color: Colors.grey.withValues(alpha: 0.1),
             blurRadius: 4,
             offset: const Offset(0, 2),
           ),
@@ -51,7 +51,7 @@ class _PatientOverviewScreenState extends State<PatientOverviewScreen> {
             width: 48,
             height: 48,
             decoration: BoxDecoration(
-              color: primaryGreen.withOpacity(0.2),
+              color: primaryGreen.withValues(alpha: 0.2),
               shape: BoxShape.circle,
             ),
             child: Icon(Icons.person, size: 24, color: primaryGreen),
@@ -133,7 +133,7 @@ class _PatientOverviewScreenState extends State<PatientOverviewScreen> {
         borderRadius: BorderRadius.circular(8),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
+            color: Colors.grey.withValues(alpha: 0.1),
             blurRadius: 4,
             offset: const Offset(0, 1),
           ),
@@ -236,7 +236,7 @@ class _PatientOverviewScreenState extends State<PatientOverviewScreen> {
         borderRadius: BorderRadius.circular(8),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
+            color: Colors.grey.withValues(alpha: 0.1),
             blurRadius: 4,
             offset: const Offset(0, 1),
           ),
@@ -329,7 +329,7 @@ class _PatientOverviewScreenState extends State<PatientOverviewScreen> {
                     ),
                     belowBarData: BarAreaData(
                       show: true,
-                      color: primaryGreen.withOpacity(0.1),
+                      color: primaryGreen.withValues(alpha: 0.1),
                     ),
                   ),
                 ],
@@ -349,7 +349,7 @@ class _PatientOverviewScreenState extends State<PatientOverviewScreen> {
         borderRadius: BorderRadius.circular(8),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
+            color: Colors.grey.withValues(alpha: 0.1),
             blurRadius: 4,
             offset: const Offset(0, 1),
           ),
@@ -369,7 +369,7 @@ class _PatientOverviewScreenState extends State<PatientOverviewScreen> {
                 padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                 decoration: BoxDecoration(
                   color: flags.isEmpty
-                      ? primaryGreen.withOpacity(0.2)
+                      ? primaryGreen.withValues(alpha: 0.2)
                       : Colors.red[50],
                   borderRadius: BorderRadius.circular(8),
                 ),
@@ -389,7 +389,7 @@ class _PatientOverviewScreenState extends State<PatientOverviewScreen> {
             Container(
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: primaryGreen.withOpacity(0.1),
+                color: primaryGreen.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(6),
               ),
               child: Row(
@@ -461,19 +461,23 @@ class _PatientOverviewScreenState extends State<PatientOverviewScreen> {
         'nutrition_summary_${widget.patient.name.replaceAll(' ', '_')}',
       );
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Report downloaded successfully'),
-          backgroundColor: primaryGreen,
-        ),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Report downloaded successfully'),
+            backgroundColor: primaryGreen,
+          ),
+        );
+      }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Failed to download: ${e.toString()}'),
-          backgroundColor: Colors.red,
-        ),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to download: ${e.toString()}'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
     }
   }
 
@@ -579,7 +583,7 @@ class _PatientOverviewScreenState extends State<PatientOverviewScreen> {
                         borderRadius: BorderRadius.circular(8),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.grey.withOpacity(0.1),
+                            color: Colors.grey.withValues(alpha: 0.1),
                             blurRadius: 4,
                             offset: const Offset(0, 1),
                           ),
@@ -629,25 +633,29 @@ class _PatientOverviewScreenState extends State<PatientOverviewScreen> {
     final apiService = Provider.of<ApiService>(context, listen: false);
     try {
       await apiService.sendNutritionAlert(widget.patient.id);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: const Text('Nutrition alert sent via SMS'),
-          behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-          backgroundColor: primaryGreen,
-          duration: const Duration(seconds: 2),
-        ),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Text('Nutrition alert sent via SMS'),
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            backgroundColor: primaryGreen,
+            duration: const Duration(seconds: 2),
+          ),
+        );
+      }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Failed to send alert: ${e.toString()}'),
-          behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-          backgroundColor: Colors.red,
-          duration: const Duration(seconds: 2),
-        ),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to send alert: ${e.toString()}'),
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            backgroundColor: Colors.red,
+            duration: const Duration(seconds: 2),
+          ),
+        );
+      }
     }
   }
 }
