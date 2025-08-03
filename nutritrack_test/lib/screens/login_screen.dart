@@ -46,107 +46,114 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Future<void> _handleLogin() async {
     if (!_formKey.currentState!.validate()) return;
-    
+
     final authState = Provider.of<AuthState>(context, listen: false);
     await authState.login(
       _emailController.text.trim(),
       _passwordController.text.trim(),
     );
-    
+
     if (authState.isLoggedIn && mounted) {
       Navigator.pushReplacementNamed(context, '/home');
     }
   }
 
   void _showForgotPasswordDialog() {
-  final TextEditingController emailController = TextEditingController();
-  
-  showDialog(
-    context: context,
-    builder: (context) => AlertDialog(
-      title: const Text('Reset Password'),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const Text('Enter your email to receive a password reset link:'),
-          const SizedBox(height: 16),
-          TextField(
-            controller: emailController,
-            keyboardType: TextInputType.emailAddress,
-            decoration: const InputDecoration(
-              hintText: 'Email address',
-              border: OutlineInputBorder(),
-              prefixIcon: Icon(Icons.email),
+    final TextEditingController emailController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Reset Password'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text('Enter your email to receive a password reset link:'),
+            const SizedBox(height: 16),
+            TextField(
+              controller: emailController,
+              keyboardType: TextInputType.emailAddress,
+              decoration: const InputDecoration(
+                hintText: 'Email address',
+                border: OutlineInputBorder(),
+                prefixIcon: Icon(Icons.email),
+              ),
             ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              final email = emailController.text.trim();
+              final scaffoldMessenger = ScaffoldMessenger.of(context);
+              final navigator = Navigator.of(context);
+
+              // Validate email
+              if (email.isEmpty) {
+                scaffoldMessenger.showSnackBar(
+                  const SnackBar(content: Text('Please enter your email')),
+                );
+                return;
+              }
+
+              if (!email.contains('@') || !email.contains('.')) {
+                scaffoldMessenger.showSnackBar(
+                  const SnackBar(content: Text('Please enter a valid email')),
+                );
+                return;
+              }
+
+              try {
+                // Show loading
+                navigator.pop(); // Close dialog first
+
+                await FirebaseAuth.instance.sendPasswordResetEmail(
+                  email: email,
+                );
+
+                // Show success message
+                scaffoldMessenger.showSnackBar(
+                  const SnackBar(
+                    content: Text(
+                      'Password reset email sent! Check your inbox.',
+                    ),
+                    backgroundColor: Colors.green,
+                  ),
+                );
+              } catch (e) {
+                // Show error message
+                scaffoldMessenger.showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      'Error: ${_getFirebaseErrorMessage(e.toString())}',
+                    ),
+                    backgroundColor: Colors.red,
+                  ),
+                );
+              }
+            },
+            child: const Text('Send Reset Email'),
           ),
         ],
       ),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.pop(context),
-          child: const Text('Cancel'),
-        ),
-        ElevatedButton(
-          onPressed: () async {
-            final email = emailController.text.trim();
-            final scaffoldMessenger = ScaffoldMessenger.of(context);
-            final navigator = Navigator.of(context);
-            
-            // Validate email
-            if (email.isEmpty) {
-              scaffoldMessenger.showSnackBar(
-                const SnackBar(content: Text('Please enter your email')),
-              );
-              return;
-            }
-            
-            if (!email.contains('@') || !email.contains('.')) {
-              scaffoldMessenger.showSnackBar(
-                const SnackBar(content: Text('Please enter a valid email')),
-              );
-              return;
-            }
-            
-            try {
-              // Show loading
-              navigator.pop(); // Close dialog first
-              
-              await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
-              
-              // Show success message
-              scaffoldMessenger.showSnackBar(
-                const SnackBar(
-                  content: Text('Password reset email sent! Check your inbox.'),
-                  backgroundColor: Colors.green,
-                ),
-              );
-            } catch (e) {
-              // Show error message
-              scaffoldMessenger.showSnackBar(
-                SnackBar(
-                  content: Text('Error: ${_getFirebaseErrorMessage(e.toString())}'),
-                  backgroundColor: Colors.red,
-                ),
-              );
-            }
-          },
-          child: const Text('Send Reset Email'),
-        ),
-      ],
-    ),
-  );
-}
-String _getFirebaseErrorMessage(String error) {
-  if (error.contains('user-not-found')) {
-    return 'No account found with this email address';
-  } else if (error.contains('invalid-email')) {
-    return 'Invalid email address';
-  } else if (error.contains('too-many-requests')) {
-    return 'Too many requests. Please try again later';
-  } else {
-    return 'Failed to send reset email. Please try again';
+    );
   }
-}
+
+  String _getFirebaseErrorMessage(String error) {
+    if (error.contains('user-not-found')) {
+      return 'No account found with this email address';
+    } else if (error.contains('invalid-email')) {
+      return 'Invalid email address';
+    } else if (error.contains('too-many-requests')) {
+      return 'Too many requests. Please try again later';
+    } else {
+      return 'Failed to send reset email. Please try again';
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -193,37 +200,37 @@ String _getFirebaseErrorMessage(String error) {
                   ),
                   const SizedBox(height: 60),
 
-              // Error Message
-              if (authState.errorMessage != null)
-                Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(12),
-                  margin: const EdgeInsets.only(bottom: 20),
-                  decoration: BoxDecoration(
-                    color: Colors.red[50],
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: Colors.red[200]!),
-                  ),
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.error_outline,
-                        color: Colors.red[700],
-                        size: 20,
+                  // Error Message
+                  if (authState.errorMessage != null)
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(12),
+                      margin: const EdgeInsets.only(bottom: 20),
+                      decoration: BoxDecoration(
+                        color: Colors.red[50],
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(color: Colors.red[200]!),
                       ),
-                      const SizedBox(width: 8),
-                      Expanded(child: Text(authState.errorMessage!)),
-                      GestureDetector(
-                        onTap: () => authState.clearError(),
-                        child: Icon(
-                          Icons.close,
-                          color: Colors.red[700],
-                          size: 20,
-                        ),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.error_outline,
+                            color: Colors.red[700],
+                            size: 20,
+                          ),
+                          const SizedBox(width: 8),
+                          Expanded(child: Text(authState.errorMessage!)),
+                          GestureDetector(
+                            onTap: () => authState.clearError(),
+                            child: Icon(
+                              Icons.close,
+                              color: Colors.red[700],
+                              size: 20,
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                ),
+                    ),
 
                   // Email Field
                   AuthTextField(
@@ -271,7 +278,9 @@ String _getFirebaseErrorMessage(String error) {
                       onPressed: authState.isLoading ? null : _handleLogin,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF91C788),
-                        disabledBackgroundColor: const Color(0xFF91C788).withValues(alpha: 0.6),
+                        disabledBackgroundColor: const Color(
+                          0xFF91C788,
+                        ).withValues(alpha: 0.6),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(16),
                         ),
@@ -283,7 +292,9 @@ String _getFirebaseErrorMessage(String error) {
                               width: 24,
                               child: CircularProgressIndicator(
                                 strokeWidth: 2,
-                                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                  Colors.white,
+                                ),
                               ),
                             )
                           : const Text(
