@@ -133,7 +133,7 @@ class _ManagePatientDetailsSheetState extends State<ManagePatientDetailsSheet> {
             onPressed: () async {
               final navigator = Navigator.of(context);
               final scaffoldMessenger = ScaffoldMessenger.of(context);
-              
+
               final updatedPatient = Patient(
                 id: patient.id,
                 name: nameController.text,
@@ -161,9 +161,7 @@ class _ManagePatientDetailsSheetState extends State<ManagePatientDetailsSheet> {
 
                 navigator.pop();
                 scaffoldMessenger.showSnackBar(
-                  const SnackBar(
-                    content: Text('Patient updated successfully'),
-                  ),
+                  const SnackBar(content: Text('Patient updated successfully')),
                 );
               } catch (e) {
                 scaffoldMessenger.showSnackBar(

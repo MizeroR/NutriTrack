@@ -145,19 +145,17 @@ class AuthState extends ChangeNotifier {
     }
   }
 
-
-
   Future<void> logout() async {
     // Clear cached data first
     final prefs = await SharedPreferences.getInstance();
     if (user != null) {
       await prefs.remove('cachedUserData_${user!.uid}');
     }
-    
+
     // Clear local state
     _currentUserData = null;
     _errorMessage = null;
-    
+
     // Sign out from Firebase
     await _auth.signOut();
 

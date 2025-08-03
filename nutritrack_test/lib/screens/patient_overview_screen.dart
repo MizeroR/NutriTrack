@@ -638,7 +638,9 @@ class PatientOverviewScreenState extends State<PatientOverviewScreen> {
           SnackBar(
             content: const Text('Nutrition alert sent via SMS'),
             behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
             backgroundColor: primaryGreen,
             duration: const Duration(seconds: 2),
           ),
@@ -650,7 +652,9 @@ class PatientOverviewScreenState extends State<PatientOverviewScreen> {
           SnackBar(
             content: Text('Failed to send alert: ${e.toString()}'),
             behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
             backgroundColor: Colors.red,
             duration: const Duration(seconds: 2),
           ),

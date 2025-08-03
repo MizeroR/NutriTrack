@@ -138,133 +138,134 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
                 // Error Message
                 if (authState.errorMessage != null)
-                Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(12),
-                  margin: const EdgeInsets.only(bottom: 20),
-                  decoration: BoxDecoration(
-                    color: Colors.red[50],
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: Colors.red[200]!),
-                  ),
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.error_outline,
-                        color: Colors.red[700],
-                        size: 20,
-                      ),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: Text(
-                          authState.errorMessage!,
-                          style: TextStyle(
-                            color: Colors.red[700],
-                            fontSize: 14,
-                          ),
-                        ),
-                      ),
-                      GestureDetector(
-                        onTap: () => authState.clearError(),
-                        child: Icon(
-                          Icons.close,
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(12),
+                    margin: const EdgeInsets.only(bottom: 20),
+                    decoration: BoxDecoration(
+                      color: Colors.red[50],
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: Colors.red[200]!),
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.error_outline,
                           color: Colors.red[700],
                           size: 20,
                         ),
-                      ),
-                    ],
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Text(
+                            authState.errorMessage!,
+                            style: TextStyle(
+                              color: Colors.red[700],
+                              fontSize: 14,
+                            ),
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () => authState.clearError(),
+                          child: Icon(
+                            Icons.close,
+                            color: Colors.red[700],
+                            size: 20,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
 
                 Form(
                   key: _formKey,
                   child: Column(
                     children: [
-                    AuthTextField(
-                      controller: _nameController,
-                      hintText: 'Full Name',
-                      prefixIcon: Icons.person_outline,
-                      validator: _validateName,
-                      helperText: 'Enter your full name as it appears on your ID',
-                    ),
-                    const SizedBox(height: 16),
-
-                    AuthTextField(
-                      controller: _emailController,
-                      hintText: 'Email Address',
-                      keyboardType: TextInputType.emailAddress,
-                      prefixIcon: Icons.email_outlined,
-                      validator: _validateEmail,
-                      helperText: 'We\'ll use this for account verification',
-                    ),
-                    const SizedBox(height: 16),
-
-                    AuthTextField(
-                      controller: _passwordController,
-                      hintText: 'Password',
-                      obscureText: true,
-                      prefixIcon: Icons.lock_outline,
-                      showPasswordToggle: true,
-                      validator: _validatePassword,
-                      helperText: 'Minimum 6 characters',
-                    ),
-                    const SizedBox(height: 16),
-
-                    AuthTextField(
-                      controller: _confirmPasswordController,
-                      hintText: 'Confirm Password',
-                      obscureText: true,
-                      prefixIcon: Icons.lock_outline,
-                      showPasswordToggle: true,
-                      validator: _validateConfirmPassword,
-                    ),
-                    const SizedBox(height: 16),
-
-                    AuthTextField(
-                      controller: _healthcareIdController,
-                      hintText: 'Healthcare Worker ID',
-                      prefixIcon: Icons.badge_outlined,
-                      validator: _validateHealthcareId,
-                      helperText: 'Your professional healthcare worker ID',
-                    ),
-                    const SizedBox(height: 16),
-
-                    AuthTextField(
-                      controller: _facilityNameController,
-                      hintText: 'Facility Name (Optional)',
-                      prefixIcon: Icons.local_hospital_outlined,
-                      helperText: 'Hospital, clinic, or health center name',
-                    ),
-                    const SizedBox(height: 16),
-
-                    DropdownButtonFormField<String>(
-                      value: _selectedRole,
-                      decoration: InputDecoration(
-                        contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 20,
-                          vertical: 16,
-                        ),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(16),
-                          borderSide: const BorderSide(
-                            color: Color(0xFFE5E7EB),
-                          ),
-                        ),
-                        hintText: 'Select Role',
+                      AuthTextField(
+                        controller: _nameController,
+                        hintText: 'Full Name',
+                        prefixIcon: Icons.person_outline,
+                        validator: _validateName,
+                        helperText:
+                            'Enter your full name as it appears on your ID',
                       ),
-                      items: _roles
-                          .map(
-                            (role) => DropdownMenuItem<String>(
-                              value: role,
-                              child: Text(role),
+                      const SizedBox(height: 16),
+
+                      AuthTextField(
+                        controller: _emailController,
+                        hintText: 'Email Address',
+                        keyboardType: TextInputType.emailAddress,
+                        prefixIcon: Icons.email_outlined,
+                        validator: _validateEmail,
+                        helperText: 'We\'ll use this for account verification',
+                      ),
+                      const SizedBox(height: 16),
+
+                      AuthTextField(
+                        controller: _passwordController,
+                        hintText: 'Password',
+                        obscureText: true,
+                        prefixIcon: Icons.lock_outline,
+                        showPasswordToggle: true,
+                        validator: _validatePassword,
+                        helperText: 'Minimum 6 characters',
+                      ),
+                      const SizedBox(height: 16),
+
+                      AuthTextField(
+                        controller: _confirmPasswordController,
+                        hintText: 'Confirm Password',
+                        obscureText: true,
+                        prefixIcon: Icons.lock_outline,
+                        showPasswordToggle: true,
+                        validator: _validateConfirmPassword,
+                      ),
+                      const SizedBox(height: 16),
+
+                      AuthTextField(
+                        controller: _healthcareIdController,
+                        hintText: 'Healthcare Worker ID',
+                        prefixIcon: Icons.badge_outlined,
+                        validator: _validateHealthcareId,
+                        helperText: 'Your professional healthcare worker ID',
+                      ),
+                      const SizedBox(height: 16),
+
+                      AuthTextField(
+                        controller: _facilityNameController,
+                        hintText: 'Facility Name (Optional)',
+                        prefixIcon: Icons.local_hospital_outlined,
+                        helperText: 'Hospital, clinic, or health center name',
+                      ),
+                      const SizedBox(height: 16),
+
+                      DropdownButtonFormField<String>(
+                        value: _selectedRole,
+                        decoration: InputDecoration(
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 20,
+                            vertical: 16,
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(16),
+                            borderSide: const BorderSide(
+                              color: Color(0xFFE5E7EB),
                             ),
-                          )
-                          .toList(),
-                      onChanged: (value) =>
-                          setState(() => _selectedRole = value),
-                      validator: (value) =>
-                          value == null ? 'Please select a role' : null,
-                    ),
+                          ),
+                          hintText: 'Select Role',
+                        ),
+                        items: _roles
+                            .map(
+                              (role) => DropdownMenuItem<String>(
+                                value: role,
+                                child: Text(role),
+                              ),
+                            )
+                            .toList(),
+                        onChanged: (value) =>
+                            setState(() => _selectedRole = value),
+                        validator: (value) =>
+                            value == null ? 'Please select a role' : null,
+                      ),
                     ],
                   ),
                 ),
@@ -273,42 +274,45 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
                 // Terms Agreement
                 Row(
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      authState.setAgreeToTerms(!authState.agreeToTerms);
-                    },
-                    child: Container(
-                      width: 20,
-                      height: 20,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        authState.setAgreeToTerms(!authState.agreeToTerms);
+                      },
+                      child: Container(
+                        width: 20,
+                        height: 20,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: authState.agreeToTerms
+                                ? const Color(0xFF91C788)
+                                : const Color(0xFFD1D5DB),
+                            width: 2,
+                          ),
                           color: authState.agreeToTerms
                               ? const Color(0xFF91C788)
-                              : const Color(0xFFD1D5DB),
-                          width: 2,
+                              : Colors.transparent,
                         ),
-                        color: authState.agreeToTerms
-                            ? const Color(0xFF91C788)
-                            : Colors.transparent,
+                        child: authState.agreeToTerms
+                            ? const Icon(
+                                Icons.check,
+                                size: 14,
+                                color: Colors.white,
+                              )
+                            : null,
                       ),
-                      child: authState.agreeToTerms
-                          ? const Icon(
-                              Icons.check,
-                              size: 14,
-                              color: Colors.white,
-                            )
-                          : null,
                     ),
-                  ),
-                  const SizedBox(width: 12),
-                  const Expanded(
-                    child: Text(
-                      'I agree with the Terms of Service & Privacy Policy',
-                      style: TextStyle(color: Color(0xFF6B7280), fontSize: 14),
+                    const SizedBox(width: 12),
+                    const Expanded(
+                      child: Text(
+                        'I agree with the Terms of Service & Privacy Policy',
+                        style: TextStyle(
+                          color: Color(0xFF6B7280),
+                          fontSize: 14,
+                        ),
+                      ),
                     ),
-                  ),
                   ],
                 ),
 
@@ -316,58 +320,67 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
                 // Submit Button
                 SizedBox(
-                width: double.infinity,
-                height: 56,
-                child: ElevatedButton(
-                  onPressed: authState.isLoading
-                      ? null
-                      : () async {
-                          final navigator = Navigator.of(context);
-                          final scaffoldMessenger = ScaffoldMessenger.of(context);
-                          
-                          if (_formKey.currentState!.validate() && _selectedRole != null) {
-                            await authState.register(
-                              _nameController.text.trim(),
-                              _emailController.text.trim(),
-                              _passwordController.text.trim(),
-                              _healthcareIdController.text.trim(),
-                              _facilityNameController.text.trim(),
-                              _selectedRole!,
+                  width: double.infinity,
+                  height: 56,
+                  child: ElevatedButton(
+                    onPressed: authState.isLoading
+                        ? null
+                        : () async {
+                            final navigator = Navigator.of(context);
+                            final scaffoldMessenger = ScaffoldMessenger.of(
+                              context,
                             );
-                            if (authState.isLoggedIn && mounted) {
-                              navigator.pushReplacementNamed('/home');
+
+                            if (_formKey.currentState!.validate() &&
+                                _selectedRole != null) {
+                              await authState.register(
+                                _nameController.text.trim(),
+                                _emailController.text.trim(),
+                                _passwordController.text.trim(),
+                                _healthcareIdController.text.trim(),
+                                _facilityNameController.text.trim(),
+                                _selectedRole!,
+                              );
+                              if (authState.isLoggedIn && mounted) {
+                                navigator.pushReplacementNamed('/home');
+                              }
+                            } else if (_selectedRole == null) {
+                              scaffoldMessenger.showSnackBar(
+                                const SnackBar(
+                                  content: Text('Please select your role'),
+                                ),
+                              );
                             }
-                          } else if (_selectedRole == null) {
-                            scaffoldMessenger.showSnackBar(
-                              const SnackBar(content: Text('Please select your role')),
-                            );
-                          }
-                        },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF91C788),
-                    disabledBackgroundColor: const Color(0xFF91C788).withValues(alpha: 0.6),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
+                          },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF91C788),
+                      disabledBackgroundColor: const Color(
+                        0xFF91C788,
+                      ).withValues(alpha: 0.6),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      elevation: 0,
                     ),
-                    elevation: 0,
-                  ),
-                  child: authState.isLoading
-                      ? const SizedBox(
-                          height: 24,
-                          width: 24,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                    child: authState.isLoading
+                        ? const SizedBox(
+                            height: 24,
+                            width: 24,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                Colors.white,
+                              ),
+                            ),
+                          )
+                        : const Text(
+                            'Create Account',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 18,
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
-                        )
-                      : const Text(
-                          'Create Account',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 18,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
                   ),
                 ),
 
@@ -375,26 +388,26 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
                 // Login Redirect
                 TextButton(
-                onPressed: () {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (_) => const LoginScreen()),
-                  );
-                },
-                child: RichText(
-                  text: const TextSpan(
-                    text: "Already have an account? ",
-                    style: TextStyle(color: Color(0xFF6B7280)),
-                    children: [
-                      TextSpan(
-                        text: 'Log In',
-                        style: TextStyle(
-                          color: Color(0xFF91C788),
-                          fontWeight: FontWeight.w600,
+                  onPressed: () {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (_) => const LoginScreen()),
+                    );
+                  },
+                  child: RichText(
+                    text: const TextSpan(
+                      text: "Already have an account? ",
+                      style: TextStyle(color: Color(0xFF6B7280)),
+                      children: [
+                        TextSpan(
+                          text: 'Log In',
+                          style: TextStyle(
+                            color: Color(0xFF91C788),
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
+                      ],
+                    ),
                   ),
                 ),
               ],

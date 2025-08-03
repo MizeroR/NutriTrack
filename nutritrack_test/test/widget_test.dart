@@ -1,30 +1,51 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
-import 'package:nutritrack_test/main.dart';
+import 'package:nutritrack_test/widgets/auth_text_field.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp(isDarkMode: false));
+  group('Widget Tests', () {
+    testWidgets('AuthTextField displays correctly', (WidgetTester tester) async {
+      final controller = TextEditingController();
+      
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: AuthTextField(
+              controller: controller,
+              hintText: 'Test Field',
+              prefixIcon: Icons.email,
+            ),
+          ),
+        ),
+      );
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+      // Verify the text field is displayed
+      expect(find.byType(TextFormField), findsOneWidget);
+      expect(find.byIcon(Icons.email), findsOneWidget);
+    });
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+    testWidgets('AuthTextField with password toggle', (WidgetTester tester) async {
+      final controller = TextEditingController();
+      
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: AuthTextField(
+              controller: controller,
+              hintText: 'Password',
+              prefixIcon: Icons.lock,
+              obscureText: true,
+              showPasswordToggle: true,
+            ),
+          ),
+        ),
+      );
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+      // Verify password field with toggle
+      expect(find.byType(TextFormField), findsOneWidget);
+      expect(find.byIcon(Icons.lock), findsOneWidget);
+      // Check for any visibility icon (on or off)
+      expect(find.byType(IconButton), findsOneWidget);
+    });
   });
 }

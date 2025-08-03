@@ -69,8 +69,8 @@ class _AuthTextFieldState extends State<AuthTextField> {
               color: _errorText != null
                   ? Colors.red.shade300
                   : _isFocused
-                      ? const Color(0xFF91C788)
-                      : const Color(0xFFE5E7EB),
+                  ? const Color(0xFF91C788)
+                  : const Color(0xFFE5E7EB),
               width: _isFocused ? 2 : 1,
             ),
           ),
@@ -112,11 +112,8 @@ class _AuthTextFieldState extends State<AuthTextField> {
                         },
                       )
                     : widget.controller.text.isNotEmpty && _errorText == null
-                        ? const Icon(
-                            Icons.check_circle,
-                            color: Colors.green,
-                          )
-                        : null,
+                    ? const Icon(Icons.check_circle, color: Colors.green)
+                    : null,
                 border: InputBorder.none,
                 contentPadding: const EdgeInsets.symmetric(
                   horizontal: 20,
@@ -132,10 +129,7 @@ class _AuthTextFieldState extends State<AuthTextField> {
             padding: const EdgeInsets.only(top: 4, left: 16),
             child: Text(
               widget.helperText!,
-              style: const TextStyle(
-                color: Color(0xFF6B7280),
-                fontSize: 12,
-              ),
+              style: const TextStyle(color: Color(0xFF6B7280), fontSize: 12),
             ),
           ),
         if (_errorText != null)
@@ -143,10 +137,7 @@ class _AuthTextFieldState extends State<AuthTextField> {
             padding: const EdgeInsets.only(top: 4, left: 16),
             child: Text(
               _errorText!,
-              style: const TextStyle(
-                color: Colors.red,
-                fontSize: 12,
-              ),
+              style: const TextStyle(color: Colors.red, fontSize: 12),
             ),
           ),
       ],
