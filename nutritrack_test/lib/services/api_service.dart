@@ -162,7 +162,9 @@ class ApiService {
       );
 
       final response = await http.get(uri, headers: headers);
-      _logger.d('Alerts API Response: ${response.statusCode} - ${response.body}');
+      _logger.d(
+        'Alerts API Response: ${response.statusCode} - ${response.body}',
+      );
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);

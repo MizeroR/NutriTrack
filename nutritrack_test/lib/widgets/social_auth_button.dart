@@ -39,7 +39,9 @@ class SocialAuthButton extends StatelessWidget {
                   height: 20,
                   child: CircularProgressIndicator(
                     strokeWidth: 2,
-                    valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF91C788)),
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                      Color(0xFF91C788),
+                    ),
                   ),
                 )
               else
@@ -47,7 +49,9 @@ class SocialAuthButton extends StatelessWidget {
                   width: 24,
                   height: 24,
                   decoration: BoxDecoration(
-                    color: iconText == 'G' ? const Color(0xFF91C788) : const Color(0xFF1877F2),
+                    color: iconText == 'G'
+                        ? const Color(0xFF91C788)
+                        : const Color(0xFF1877F2),
                     shape: BoxShape.circle,
                   ),
                   child: Center(
@@ -67,7 +71,9 @@ class SocialAuthButton extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
-                  color: isLoading ? const Color(0xFF91C788) : const Color(0xFF374151),
+                  color: isLoading
+                      ? const Color(0xFF91C788)
+                      : const Color(0xFF374151),
                 ),
               ),
             ],
